@@ -1,0 +1,64 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-on-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install prerequisites on Ubuntu
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            build-essential \
+            python3 \
+            python3-pip
+          pip install pytest pytest-cov
+
+      # - name: Build rtype binaries on Ubuntu (desktop)
+      #   run: make re
+
+      # - name: Check Ubuntu build (desktop)
+      #   run: |
+      #     test -f 304pacman
+
+  # build-on-windows:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+
+  #     - name: Install prerequisites on Ubuntu
+  #       run: |
+  #         sudo apt update
+  #         sudo apt install -y \
+  #           build-essential \
+  #           python3 \
+  #           python3-pip
+  #         pip install pytest pytest-cov
+
+  # - name: Build rtype binaries on Ubuntu (desktop)
+  #   run: make re
+
+  # - name: Check Ubuntu build (desktop)
+  #   run: |
+  #     test -f 304pacman
+
+  mirror:
+    # needs: [build-on-ubuntu, build-on-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: ${{ secrets.EPI_REPO_URL }}
+          ssh_private_key: ${{ secrets.EPI_MIRRORING_KEY }}
