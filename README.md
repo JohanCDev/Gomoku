@@ -1,0 +1,2 @@
+# Gomoku
+Gomoku Epitech project
