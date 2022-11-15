@@ -19,17 +19,35 @@ class ParseInput:
         self.__parsedInput = self.__input.rstrip().split(" ")
 
     def getInput(self) -> str:
-        """Get the value of the previous input"""
+        """Get the value of the previous input
+
+        Returns
+        ----------
+        str
+            Previous input
+        """
 
         return self.__input
 
     def getParsedInput(self) -> list:
-        """Get the input parsed in a list of strings"""
+        """Get the input parsed in a list of strings.
+
+        Returns
+        ----------
+        list
+            List of strings being the input parsed by spaces
+        """
 
         return self.__parsedInput
 
     def setInput(self, value: str) -> None:
-        """Function made for tests. It will allow us to not use the input() function."""
+        """Function made for tests. It will allow us to not use the input() function.
+
+        Parameters
+        ----------
+        value: str
+            The new value of input
+        """
 
         self.__input = value
         self.__parsedInput = self.__input.rstrip().split(" ")
