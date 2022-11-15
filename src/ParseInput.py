@@ -2,17 +2,17 @@
 
 class ParseInput:
     def __init__(self):
-        self.input = ""
-        self.parsedInput = []
+        self.__input = ""
+        self.__parsedInput = []
 
     def askInput(self):
-        self.input = input()
+        self.__input = input()
 
     def parseInput(self):
-        self.parsedInput = self.input.rstrip().split(" ")
+        self.__parsedInput = self.__input.rstrip().split(" ")
 
     def getInput(self):
-        return self.input
+        return self.__input
 
     def getParsedInput(self) -> list:
-        return self.parsedInput
+        return self.__parsedInput
