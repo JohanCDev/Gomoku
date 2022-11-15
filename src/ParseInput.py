@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 
+
+def flush_input():
+    try:
+        import msvcrt
+        while msvcrt.kbhit():
+            msvcrt.getch()
+    except ImportError:
+        import sys    # for linux/unix
+        import termios
+        termios.tcflush(sys.stdin, termios.TCIOFLUSH)
+
+
 class ParseInput:
     """ParseInput class
 
@@ -15,8 +27,12 @@ class ParseInput:
     def askInput(self) -> None:
         """Ask the user its input, it will be parsed in this function"""
 
-        self.__input = input()
-        self.__parsedInput = self.__input.rstrip().split(" ")
+        try:
+            self.__input = input()
+            self.__parsedInput = self.__input.rstrip().split(" ")
+        except (EOFError, KeyboardInterrupt):
+            # See what to do in this case
+            pass
 
     def getInput(self) -> str:
         """Get the value of the previous input
