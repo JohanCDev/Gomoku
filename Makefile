@@ -9,9 +9,9 @@ NAME	= 	pbrain-gomoku-ai
 
 SRC		=	./main.py
 
-# SRC_T	=	./tests.py
+SRC_T	=	./tests.py
 
-# TESTS_NAME	=	./unit_tests.py
+TESTS_NAME	=	./unit_tests.py
 
 CP			=	cp
 
@@ -29,10 +29,10 @@ $(NAME):
 tests_run: all
 	$(CP) $(SRC_T) $(TESTS_NAME)
 	$(CHMOD) $(EXEC_RIGHTS) $(TESTS_NAME)
-#	pytest --cov=process --cov=main $(TESTS_NAME)
+	pytest $(TESTS_NAME)
 
 clean:
-#	$(RM) $(TESTS_NAME)
+	$(RM) $(TESTS_NAME)
 	$(RM) .coverage
 	$(RM) .pytest_cache/
 
