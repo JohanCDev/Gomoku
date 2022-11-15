@@ -7,7 +7,10 @@ import src.values
 class Game:
     def __init__(self):
         self.parser = ParseInput()
-        src.utils.limitMemory(src.values.maxMemory)
+        try:
+            src.utils.limitMemory(src.values.maxMemory)
+        except OSError:
+            pass
 
     def run(self) -> int:
         self.parser.askInput()
