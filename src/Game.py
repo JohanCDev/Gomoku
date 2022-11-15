@@ -7,9 +7,6 @@ class Game:
         self.parser = ParseInput()
 
     def run(self) -> int:
-        while 1:
-            self.parser.askInput()
-            self.parser.parseInput()
-            print(self.parser.getParsedInput())
-            break
+        self.parser.askInput()
+        print(self.parser.getParsedInput())
         return 0
