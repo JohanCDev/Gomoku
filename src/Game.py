@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
+from src.ParseInput import ParseInput
 
-def run() -> int:
-    print("Gomoku")
-    return 0
+
+class Game:
+    def __init__(self):
+        self.parser = ParseInput()
+
+    def run(self) -> int:
+        while 1:
+            self.parser.askInput()
+            self.parser.parseInput()
+            print(self.parser.getParsedInput())
+            break
+        return 0
