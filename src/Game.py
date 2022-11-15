@@ -10,8 +10,8 @@ class Game:
         try:
             self.parser.askInput()
         except EOFError:
-            print('Hello user it is EOF exception, please enter something and run me again')
+            print('EOFError')
         except KeyboardInterrupt:
-            print('Hello user you have pressed ctrl-c button.')
+            print('KeyboardInterrupt')
         print(self.parser.getParsedInput())
         return 0
