@@ -13,11 +13,11 @@ SOUTHWEST = 5
 WEST = 6
 NORTHWEST = 7
 
-# MAP
-MAP: list[list[int]] = []
+# BOARD
+BOARD: list[list[int]] = []
 
 
-def INITMAP(size: int) -> None:
+def INITBOARD(size: int) -> None:
     for i in range(0, size):
         for j in range(0, size):
-            MAP[i][j] = EMPTY
+            BOARD[i][j] = EMPTY

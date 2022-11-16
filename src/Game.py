@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from src.ParseInput import ParseInput
 from src.utils.PrintGomoku import print_gomoku
-from src.utils.MapGomoku import *
+from src.utils.BoardGomoku import *
 
 
 class Game:
@@ -18,25 +18,32 @@ class Game:
         }
 
     def run(self) -> int:
-        try:
-            self.parser.askInput()
-            self.command_map[self.parser.getParsedInput()[0]]()
-        except KeyError:
-            print_gomoku("UNKNOWN message - command ",
-            self.parser.getParsedInput()[0], "not existing.")
-        except EOFError:
-            print_gomoku('EOFError')
-        except KeyboardInterrupt:
-            print_gomoku('KeyboardInterrupt')
-        print_gomoku(self.parser.getParsedInput())
+        while True:
+            try:
+                self.parser.askInput()
+            except EOFError:
+                print('EOFError')
+                break
+            except KeyboardInterrupt:
+                print('KeyboardInterrupt')
+                break
+            try:
+                self.command_map[self.parser.getParsedInput()[0]]()
+            except KeyError:
+                print("UNKNOWN message - command ", self.parser.getParsedInput()[0], "not existing.")
+
         return 0
 
     def start_command(self) -> bool:
-        if int(self.parser.getParsedInput()[1]) != 20:
-            print_gomoku("ERROR message - unsupported size or other error")
+        boardSize : int = -1
+        try:
+            boardSize = int(self.parser.getParsedInput()[1])
+            if boardSize < 5:
+                raise ValueError
+        except ValueError:
+            print("ERROR message - unsupported size or other error")
             return False
-        # Create board
-        INITMAP(int(self.parser.getParsedInput()[1]))
+        INITBOARD(boardSize)
         print_gomoku("OK - everything is good")
         return True
 
@@ -71,7 +78,26 @@ class Game:
         return True
 
     def board_command(self) -> bool:
-        # TODO
+        def checkBoardInput(coords: str) -> int:
+            cs = coords.split(',')
+            if len(cs) != 3:
+                return False
+            for c in cs:
+                try:
+                    int(c)
+                except ValueError:
+                    print("ERROR message - unsupported size or other error")
+                    return False
+            if int(cs[2]) not in [1, 2, 3]:
+                return False
+            if int(cs[0]) not in range(gameBoard._size) or int(cs[1]) not in range(gameBoard._size):
+                return False
+            return 0
+        while True:
+            inpt = input()
+            if inpt == "DONE":
+                break
+
         print_gomoku("board")
         print_gomoku(self.parser.getParsedInput())
         return True
