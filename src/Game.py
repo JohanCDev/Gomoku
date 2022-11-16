@@ -17,6 +17,7 @@ class Game:
             "ABOUT": self.about_command
         }
         self.__boardSize = 0
+        self.__started : bool = False
 
     def run(self) -> int:
         while True:
@@ -29,6 +30,9 @@ class Game:
                 print('KeyboardInterrupt')
                 break
             try:
+                if self.parser.getParsedInput()[0] != "START" and not self.__started:
+                    print("DEBUG message - Please start the game with START command")
+                    continue
                 self.command_map[self.parser.getParsedInput()[0]]()
             except KeyError:
                 print("UNKNOWN message - command ", self.parser.getParsedInput()[0], "not existing.")
@@ -49,6 +53,7 @@ class Game:
         # Create board
         self.__boardSize = boardSize
         print_gomoku("OK - everything is good")
+        self.__started = True
         return True
 
     def turn_command(self) -> bool:
@@ -72,14 +77,14 @@ class Game:
         except ValueError:
             print_gomoku("ERROR message - Position is not a number")
             return False
-        print(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
+        print(f'{self.__boardSize - 3},{self.__boardSize - 2}')
         return True
 
     def begin_command(self) -> bool:
         # Launch AI reflexion
         # Place AI decision on board
         # Answer as pos_x,pos_y
-        print_gomoku(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
+        print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
         print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 

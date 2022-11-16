@@ -9,7 +9,7 @@ NAME	= 	pbrain-gomoku-ai
 
 SRC		=	pbrain-gomoku-ai.py
 
-SRC_T	=	./tests.py
+SRC_T	=	./tests/GomokuTests.py
 
 TESTS_NAME	=	./unit_tests.py
 
