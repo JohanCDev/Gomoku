@@ -8,3 +8,4 @@ unit_tests.py
 build/
 dist/
 *.exe
+pbrain-gomoku-ai

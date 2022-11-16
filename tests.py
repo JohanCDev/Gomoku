@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import builtins
-from unittest import mock
 from src.ParseInput import ParseInput
 
 

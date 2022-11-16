@@ -1,12 +1,6 @@
 name: Build
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: push
 
 jobs:
   build-on-ubuntu:
@@ -30,6 +24,9 @@ jobs:
       - name: Build Gomoku binaries
         run: make re
 
+      - name: Run tests
+        run: make tests_run
+
       - name: Check Gomoku build
         run: |
           test -f pbrain-gomoku-ai
@@ -50,15 +47,22 @@ jobs:
           packages: |
             pytest
             pytest-cov
+            pyinstaller
             make
 
       - name: Build Gomoku binaries
         run: make re
 
+      - name: Run tests
+        run: make tests_run
+
+      - name: Build executable file
+        run: ./ExeForPiskvork.ps1
+
       - name: Check Gomoku build
         uses: andstor/file-existence-action@v1
         with:
-          files: "pbrain-gomoku-ai"
+          files: "pbrain-gomoku-ai.exe"
 
   mirror:
     needs: [build-on-ubuntu, build-on-windows]
