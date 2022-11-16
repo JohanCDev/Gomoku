@@ -21,6 +21,11 @@ class Game:
             self.command_map[self.parser.getParsedInput()[0]]()
         except KeyError:
             print("UNKNOWN message - command ", self.parser.getParsedInput()[0], "not existing.")
+        except EOFError:
+            print('EOFError')
+        except KeyboardInterrupt:
+            print('KeyboardInterrupt')
+        print(self.parser.getParsedInput())
         return 0
 
     def start_command(self) -> bool:

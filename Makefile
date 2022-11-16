@@ -7,13 +7,15 @@
 
 NAME	= 	pbrain-gomoku-ai
 
-SRC		=	./main.py
+SRC		=	pbrain-gomoku-ai.py
 
 SRC_T	=	./tests.py
 
 TESTS_NAME	=	./unit_tests.py
 
 CP			=	cp
+
+MV			=	mv
 
 CHMOD		=	chmod
 
@@ -24,6 +26,8 @@ RM			=	rm -rf
 all: $(NAME)
 
 $(NAME):
+	$(CP) src/$(SRC) ./
+	$(MV) $(SRC) $(NAME)
 	$(CHMOD) $(EXEC_RIGHTS) $(NAME)
 
 tests_run: all
@@ -37,6 +41,7 @@ clean:
 	$(RM) .pytest_cache/
 
 fclean: clean
+	$(RM) $(NAME)
 
 re: fclean all
 
