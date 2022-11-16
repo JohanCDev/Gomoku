@@ -16,6 +16,7 @@ class Game:
             "END": self.end_command,
             "ABOUT": self.about_command
         }
+        self.__boardSize = 0
 
     def run(self) -> int:
         while True:
@@ -37,13 +38,16 @@ class Game:
     def start_command(self) -> bool:
         boardSize : int = -1
         try:
+            if len(self.parser.getParsedInput()) != 2:
+                raise ValueError
             boardSize = int(self.parser.getParsedInput()[1])
             if boardSize < 5:
                 raise ValueError
         except ValueError:
-            print("ERROR message - unsupported size or other error")
+            print_gomoku("ERROR message - unsupported size or other error")
             return False
-        INITBOARD(boardSize)
+        # Create board
+        self.__boardSize = boardSize
         print_gomoku("OK - everything is good")
         return True
 
@@ -54,8 +58,8 @@ class Game:
                 print_gomoku("ERROR message - Unauthorized move")
                 return False
             for arg in parsed_args:
-                if int(arg) >= 20:
-                    print_gomoku("ERROR message - Unauthorized move (invalid position)")
+                if int(arg) >= self.__boardSize:
+                    print("ERROR message - Unauthorized move (invalid position)")
                     return False
             print_gomoku("DEBUG message - Valid TURN command")
             # Add movement to board
@@ -74,29 +78,40 @@ class Game:
         # Launch AI reflexion
         # Place AI decision on board
         # Answer as pos_x,pos_y
+        print_gomoku(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
         print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 
     def board_command(self) -> bool:
-        def checkBoardInput(coords: str) -> int:
-            cs = coords.split(',')
-            if len(cs) != 3:
+
+        def checkBoardInput(coords) -> int:
+            # coord_splitted = coords.split(',')
+            if len(coords) != 3:
                 return False
-            for c in cs:
+            for c in coords:
                 try:
                     int(c)
                 except ValueError:
-                    print("ERROR message - unsupported size or other error")
+                    print_gomoku("ERROR message - unsupported size or other error")
                     return False
-            if int(cs[2]) not in [1, 2, 3]:
+            if int(coords[2]) not in [1, 2]:
+                print_gomoku("AAAAA")
                 return False
-            if int(cs[0]) not in range(gameBoard._size) or int(cs[1]) not in range(gameBoard._size):
+            if int(coords[0]) not in range(self.__boardSize) or int(coords[1]) not in range(self.__boardSize):
+                print_gomoku("BBBBB")
                 return False
-            return 0
+            return True
         while True:
-            inpt = input()
-            if inpt == "DONE":
+            print_gomoku("CCCCC")
+            self.parser.askInput()
+            inpt = self.parser.getParsedInput()
+            print_gomoku(inpt)
+            if inpt is ["DONE"]:
                 break
+            elif checkBoardInput(inpt) is False:
+                return False
+            # coord_splitted = inpt.split(',')
+                # board at pos [int(cs[0])][int(cs[1])] = int(cs[2])
 
         print_gomoku("board")
         print_gomoku(self.parser.getParsedInput())
