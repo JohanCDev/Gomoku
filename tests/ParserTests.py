@@ -2,10 +2,6 @@
 from src.ParseInput import ParseInput
 
 
-def run_tests():
-    run_parser_tests()
-
-
 def run_parser_tests():
     test_parser_init()
     test_parser_ask_input()
