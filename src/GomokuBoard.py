@@ -49,13 +49,14 @@ class GomokuBoard:
         self.__addPawn(x, y, pawnType.MANAGER)
 
     def resetBoard(self, boardSize : int = -1):
+        """ Reset completly the board, setting all the cells to empty state """
         if boardSize == -1:
             boardSize = self.__boardSize
         boardRow = [pawnType.EMPTY] * boardSize
         self.boardMap = boardRow * boardSize
 
     def getPawn(self, x : int, y :int) -> pawnType:
+        """ Get the Pawn at the given coordinates """
         if not self.__checkPos(x, y):
-            #RAISE QQ CHOSE#
             return RuntimeError("The pawn can't be get with the given coordinates")
         return self.boardMap[x][y]
