@@ -30,6 +30,9 @@ jobs:
       - name: Build Gomoku binaries
         run: make re
 
+      - name: Run tests
+        run: make tests_run
+
       - name: Check Gomoku build
         run: |
           test -f pbrain-gomoku-ai
@@ -60,7 +63,7 @@ jobs:
         run: make tests_run
 
       - name: Build executable file
-        run: ExeForPiskvork.bat
+        run: ./ExeForPiskvork.ps1
 
       - name: Check Gomoku build
         uses: andstor/file-existence-action@v1
