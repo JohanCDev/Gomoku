@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from GomokuBoard import *
 from src.ParseInput import ParseInput
 from src.Globals import *
 from src.utils.PrintGomoku import print_gomoku
@@ -7,6 +8,7 @@ from src.utils.PrintGomoku import print_gomoku
 class Game:
     def __init__(self):
         self.parser = ParseInput()
+        self.boardManager = GomokuBoard()
         self.command_map = {
             "BOARD": self.board_command,
             "START": self.start_command,
@@ -17,7 +19,44 @@ class Game:
             "ABOUT": self.about_command
         }
         self.__boardSize = 0
-        self.__started : bool = False
+        self.__started: bool = False
+
+    def __checkWin(self, pawnTypeToCheck: pawnType) -> bool:
+
+        def checkOnLine(lineToCheck: list[pawnType]) -> bool:
+            nb: int = 0
+            for char in lineToCheck:
+                if char == pawnTypeToCheck:
+                    nb += 1
+                else:
+                    nb = 0
+                if nb == 5:
+                    return True
+            return False
+
+        def checkOnColumn(y: int) -> bool:
+            nb: int = 0
+            for x in range(0, self.__boardSize - 1):
+                if self.__boardManager.getPawn(x, y) == pawnTypeToCheck:
+                    nb += 1
+                else:
+                    nb = 0
+                if nb == 5:
+                    return True
+            return False
+
+        def check_diagonal() -> bool:
+            return False
+
+        for line in self.__boardManager.boardMap:
+            if checkOnLine(line):
+                return True
+        for i in range(0, self.__boardSize - 1):
+            if checkOnColumn(i):
+                return True
+        if check_diagonal():
+            return True
+        return False
 
     def run(self) -> int:
         while True:
@@ -35,12 +74,13 @@ class Game:
                     continue
                 self.command_map[self.parser.getParsedInput()[0]]()
             except KeyError:
-                print("UNKNOWN message - command ", self.parser.getParsedInput()[0], "not existing.")
+                print("UNKNOWN message - command ",
+                      self.parser.getParsedInput()[0], "not existing.")
 
         return 0
 
     def start_command(self) -> bool:
-        boardSize : int = -1
+        boardSize: int = -1
         try:
             if len(self.parser.getParsedInput()) != 2:
                 raise ValueError
@@ -132,7 +172,8 @@ class Game:
             print_gomoku("DEBUG message - TODO Change max memory to", value)
 
         def handleTimeLeft(value: str or int):
-            print_gomoku("DEBUG message - TODO Change time left of the game to", value)
+            print_gomoku(
+                "DEBUG message - TODO Change time left of the game to", value)
 
         def handlegameType(value: str or int):
             print_gomoku("DEBUG message - TODO Change game type to", value)
@@ -144,7 +185,8 @@ class Game:
             print_gomoku("DEBUG message - TODO Evaluate ", value)
 
         def handleFolder(value: str or int):
-            print_gomoku("DEBUG message - TODO Change persistent files folder to", value)
+            print_gomoku(
+                "DEBUG message - TODO Change persistent files folder to", value)
 
         key_dict = {
             "timeout_turn": handleTimeoutTurn,
