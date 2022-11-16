@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 from src.ParseInput import ParseInput
+from src.utils.PrintGomoku import print_gomoku
+from src.utils.MapGomoku import *
 
 
 class Game:
@@ -16,46 +18,48 @@ class Game:
         }
 
     def run(self) -> int:
-        self.parser.askInput()
         try:
+            self.parser.askInput()
             self.command_map[self.parser.getParsedInput()[0]]()
         except KeyError:
-            print("UNKNOWN message - command ", self.parser.getParsedInput()[0], "not existing.")
+            print_gomoku("UNKNOWN message - command ",
+            self.parser.getParsedInput()[0], "not existing.")
         except EOFError:
-            print('EOFError')
+            print_gomoku('EOFError')
         except KeyboardInterrupt:
-            print('KeyboardInterrupt')
-        print(self.parser.getParsedInput())
+            print_gomoku('KeyboardInterrupt')
+        print_gomoku(self.parser.getParsedInput())
         return 0
 
     def start_command(self) -> bool:
-        if self.parser.getParsedInput()[1] != 20:
-            print("ERROR message - unsupported size or other error")
+        if int(self.parser.getParsedInput()[1]) != 20:
+            print_gomoku("ERROR message - unsupported size or other error")
             return False
         # Create board
-        print("OK - everything is good")
+        INITMAP(int(self.parser.getParsedInput()[1]))
+        print_gomoku("OK - everything is good")
         return True
 
     def turn_command(self) -> bool:
         try:
             parsed_args = self.parser.getParsedInput()[1].split(",")
             if len(parsed_args) != 2:
-                print("ERROR message - Unauthorized move")
+                print_gomoku("ERROR message - Unauthorized move")
                 return False
             for arg in parsed_args:
                 if int(arg) >= 20:
-                    print("ERROR message - Unauthorized move (invalid position)")
+                    print_gomoku("ERROR message - Unauthorized move (invalid position)")
                     return False
-            print("DEBUG message - Valid TURN command")
+            print_gomoku("DEBUG message - Valid TURN command")
             # Add movement to board
             # Launch AI reflexion
             # Place AI decision on board
             # Answer as pos_x,pos_y
         except IndexError:
-            print("ERROR message - No movement was given")
+            print_gomoku("ERROR message - No movement was given")
             return False
         except ValueError:
-            print("ERROR message - Position is not a number")
+            print_gomoku("ERROR message - Position is not a number")
             return False
         return True
 
@@ -63,39 +67,39 @@ class Game:
         # Launch AI reflexion
         # Place AI decision on board
         # Answer as pos_x,pos_y
-        print("DEBUG message - Valid BEGIN command")
+        print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 
     def board_command(self) -> bool:
         # TODO
-        print("board")
-        print(self.parser.getParsedInput())
+        print_gomoku("board")
+        print_gomoku(self.parser.getParsedInput())
         return True
 
     def info_command(self) -> bool:
-        def handleTimeoutTurn(value: str | int):
-            print("DEBUG message - TODO Change timeout turn to", value)
+        def handleTimeoutTurn(value: str or int):
+            print_gomoku("DEBUG message - TODO Change timeout turn to", value)
 
-        def handleTimeoutMatch(value: str | int):
-            print("DEBUG message - TODO Change timeout match to", value)
+        def handleTimeoutMatch(value: str or int):
+            print_gomoku("DEBUG message - TODO Change timeout match to", value)
 
-        def handleMaxMemory(value: str | int):
-            print("DEBUG message - TODO Change max memory to", value)
+        def handleMaxMemory(value: str or int):
+            print_gomoku("DEBUG message - TODO Change max memory to", value)
 
-        def handleTimeLeft(value: str | int):
-            print("DEBUG message - TODO Change time left of the game to", value)
+        def handleTimeLeft(value: str or int):
+            print_gomoku("DEBUG message - TODO Change time left of the game to", value)
 
-        def handlegameType(value: str | int):
-            print("DEBUG message - TODO Change game type to", value)
+        def handlegameType(value: str or int):
+            print_gomoku("DEBUG message - TODO Change game type to", value)
 
-        def handleRule(value: str | int):
-            print("DEBUG message - TODO Change game rule to", value)
+        def handleRule(value: str or int):
+            print_gomoku("DEBUG message - TODO Change game rule to", value)
 
-        def handleEvaluate(value: str | int):
-            print("DEBUG message - TODO Evaluate ", value)
+        def handleEvaluate(value: str or int):
+            print_gomoku("DEBUG message - TODO Evaluate ", value)
 
-        def handleFolder(value: str | int):
-            print("DEBUG message - TODO Change persistent files folder to", value)
+        def handleFolder(value: str or int):
+            print_gomoku("DEBUG message - TODO Change persistent files folder to", value)
 
         key_dict = {
             "timeout_turn": handleTimeoutTurn,
@@ -109,17 +113,17 @@ class Game:
         }
 
         try:
-            key_dict[self.parser.getParsedInput()[1]](self.parser.getParsedInput()[2])
+            key_dict[self.parser.getParsedInput()[1]](
+                self.parser.getParsedInput()[2])
         except IndexError:
-            print("ERROR message - No key or no value was given")
+            print_gomoku("ERROR message - No key or no value was given")
             return False
         return True
 
     def end_command(self) -> bool:
-        # Delete files and quit program
-        return True
+        exit(0)
 
     def about_command(self) -> bool:
-        print('name="Hugomoku", version="0.0.1", author="Nathan Rousseau, Johan Chrillesen, Guillaume Terrière", '
+        print_gomoku('name="Hugomoku", version="0.0.1", author="Nathan Rousseau, Johan Chrillesen, Guillaume Terrière", '
               'country="FR"')
         return True
