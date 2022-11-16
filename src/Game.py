@@ -7,6 +7,11 @@ class Game:
         self.parser = ParseInput()
 
     def run(self) -> int:
-        self.parser.askInput()
+        try:
+            self.parser.askInput()
+        except EOFError:
+            print('EOFError')
+        except KeyboardInterrupt:
+            print('KeyboardInterrupt')
         print(self.parser.getParsedInput())
         return 0
