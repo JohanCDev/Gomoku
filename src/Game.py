@@ -125,8 +125,7 @@ class Game:
         return True
 
     def end_command(self) -> bool:
-        # Delete files and quit program
-        return True
+        exit(0)
 
     def about_command(self) -> bool:
         print('name="Hugomoku", version="0.0.1", author="Nathan Rousseau, Johan Chrillesen, Guillaume Terrière", '
