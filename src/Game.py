@@ -84,37 +84,11 @@ class Game:
 
     def board_command(self) -> bool:
 
-        def checkBoardInput(coords) -> int:
-            # coord_splitted = coords.split(',')
-            if len(coords) != 3:
-                return False
-            for c in coords:
-                try:
-                    int(c)
-                except ValueError:
-                    print_gomoku("ERROR message - unsupported size or other error")
-                    return False
-            if int(coords[2]) not in [1, 2]:
-                print_gomoku("AAAAA")
-                return False
-            if int(coords[0]) not in range(self.__boardSize) or int(coords[1]) not in range(self.__boardSize):
-                print_gomoku("BBBBB")
-                return False
-            return True
         while True:
-            print_gomoku("CCCCC")
             self.parser.askInput()
             inpt = self.parser.getParsedInput()
-            print_gomoku(inpt)
-            if inpt is ["DONE"]:
+            if inpt[0] == "DONE":
                 break
-            elif checkBoardInput(inpt) is False:
-                return False
-            # coord_splitted = inpt.split(',')
-                # board at pos [int(cs[0])][int(cs[1])] = int(cs[2])
-
-        print_gomoku("board")
-        print_gomoku(self.parser.getParsedInput())
         return True
 
     def info_command(self) -> bool:
