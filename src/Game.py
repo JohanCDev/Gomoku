@@ -15,6 +15,7 @@ class Game:
             "END": self.end_command,
             "ABOUT": self.about_command
         }
+        self.__boardSize = 0
 
     def run(self) -> int:
         while True:
@@ -36,6 +37,8 @@ class Game:
     def start_command(self) -> bool:
         boardSize : int = -1
         try:
+            if len(self.parser.getParsedInput()) != 2:
+                raise ValueError
             boardSize = int(self.parser.getParsedInput()[1])
             if boardSize < 5:
                 raise ValueError
@@ -43,6 +46,7 @@ class Game:
             print("ERROR message - unsupported size or other error")
             return False
         # Create board
+        self.__boardSize = boardSize
         print("OK - everything is good")
         return True
 
@@ -53,7 +57,7 @@ class Game:
                 print("ERROR message - Unauthorized move")
                 return False
             for arg in parsed_args:
-                if int(arg) >= 20:
+                if int(arg) >= self.__boardSize or int(arg) < 0:
                     print("ERROR message - Unauthorized move (invalid position)")
                     return False
             print("DEBUG message - Valid TURN command")
@@ -67,12 +71,14 @@ class Game:
         except ValueError:
             print("ERROR message - Position is not a number")
             return False
+        print(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
         return True
 
     def begin_command(self) -> bool:
         # Launch AI reflexion
         # Place AI decision on board
         # Answer as pos_x,pos_y
+        print(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
         print("DEBUG message - Valid BEGIN command")
         return True
 
@@ -126,8 +132,7 @@ class Game:
         return True
 
     def end_command(self) -> bool:
-        # Delete files and quit program
-        return True
+        exit(0)
 
     def about_command(self) -> bool:
         print('name="{}", version="{}", author="{}", '
