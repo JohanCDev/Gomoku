@@ -72,14 +72,14 @@ class Game:
         except ValueError:
             print_gomoku("ERROR message - Position is not a number")
             return False
-        print(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
+        print(f'{self.__boardSize - 3},{self.__boardSize - 2}')
         return True
 
     def begin_command(self) -> bool:
         # Launch AI reflexion
         # Place AI decision on board
         # Answer as pos_x,pos_y
-        print_gomoku(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
+        print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
         print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 
