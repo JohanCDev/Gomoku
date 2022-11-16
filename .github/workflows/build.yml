@@ -50,15 +50,22 @@ jobs:
           packages: |
             pytest
             pytest-cov
+            pyinstaller
             make
 
       - name: Build Gomoku binaries
         run: make re
 
+      - name: Run tests
+        run: make tests_run
+
+      - name: Build executable file
+        run: ExeForPiskvork.bat
+
       - name: Check Gomoku build
         uses: andstor/file-existence-action@v1
         with:
-          files: "pbrain-gomoku-ai"
+          files: "pbrain-gomoku-ai.exe"
 
   mirror:
     needs: [build-on-ubuntu, build-on-windows]

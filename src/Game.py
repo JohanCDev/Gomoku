@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from src.ParseInput import ParseInput
+from src.Globals import *
 
 
 class Game:
@@ -129,6 +130,6 @@ class Game:
         return True
 
     def about_command(self) -> bool:
-        print('name="Hugomoku", version="0.0.1", author="Nathan Rousseau, Johan Chrillesen, Guillaume Terrière", '
-              'country="FR"')
+        print('name="{}", version="{}", author="{}", '
+              'country="{}"'.format(brainName, version, authors, country))
         return True
