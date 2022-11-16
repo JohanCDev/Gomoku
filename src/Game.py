@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from src.ParseInput import ParseInput
 from src.utils.PrintGomoku import print_gomoku
-from src.utils.BoardGomoku import *
 
 
 class Game:
