@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from src.ParseInput import ParseInput
+from src.utils.PrintGomoku import print_gomoku
 
 
 class Game:
@@ -42,33 +43,33 @@ class Game:
             if boardSize < 5:
                 raise ValueError
         except ValueError:
-            print("ERROR message - unsupported size or other error")
+            print_gomoku("ERROR message - unsupported size or other error")
             return False
         # Create board
         self.__boardSize = boardSize
-        print("OK - everything is good")
+        print_gomoku("OK - everything is good")
         return True
 
     def turn_command(self) -> bool:
         try:
             parsed_args = self.parser.getParsedInput()[1].split(",")
             if len(parsed_args) != 2:
-                print("ERROR message - Unauthorized move")
+                print_gomoku("ERROR message - Unauthorized move")
                 return False
             for arg in parsed_args:
                 if int(arg) >= self.__boardSize or int(arg) < 0:
                     print("ERROR message - Unauthorized move (invalid position)")
                     return False
-            print("DEBUG message - Valid TURN command")
+            print_gomoku("DEBUG message - Valid TURN command")
             # Add movement to board
             # Launch AI reflexion
             # Place AI decision on board
             # Answer as pos_x,pos_y
         except IndexError:
-            print("ERROR message - No movement was given")
+            print_gomoku("ERROR message - No movement was given")
             return False
         except ValueError:
-            print("ERROR message - Position is not a number")
+            print_gomoku("ERROR message - Position is not a number")
             return False
         print(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
         return True
@@ -77,40 +78,67 @@ class Game:
         # Launch AI reflexion
         # Place AI decision on board
         # Answer as pos_x,pos_y
-        print(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
-        print("DEBUG message - Valid BEGIN command")
+        print_gomoku(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
+        print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 
     def board_command(self) -> bool:
-        # TODO
-        print("board")
-        print(self.parser.getParsedInput())
+
+        def check_board_input(inpt):
+            pawnPos = inpt[0].split(',')
+            try:
+                if len(pawnPos) != 3:
+                    print_gomoku(pawnPos)
+                    raise ValueError
+                x = int(pawnPos[0])
+                y = int(pawnPos[1])
+                player = int(pawnPos[2])
+                if x < 0 or x >= self.__boardSize:
+                    raise ValueError
+                if y < 0 or y >= self.__boardSize:
+                    raise ValueError
+                if player not in [1, 2]:
+                    raise ValueError
+            except ValueError:
+                print_gomoku("DEBUG Message - Failure on Board Input")
+                return False
+            print_gomoku("DEBUG Message - Succes on Board Input")
+            return True
+
+        while True:
+            self.parser.askInput()
+            inpt = self.parser.getParsedInput()
+            if inpt[0] == "DONE":
+                print_gomoku("DEBUG Message - Exit BOARD")
+                break
+            if not check_board_input(inpt):
+                return False
         return True
 
     def info_command(self) -> bool:
-        def handleTimeoutTurn(value: str | int):
-            print("DEBUG message - TODO Change timeout turn to", value)
+        def handleTimeoutTurn(value: str or int):
+            print_gomoku("DEBUG message - TODO Change timeout turn to", value)
 
-        def handleTimeoutMatch(value: str | int):
-            print("DEBUG message - TODO Change timeout match to", value)
+        def handleTimeoutMatch(value: str or int):
+            print_gomoku("DEBUG message - TODO Change timeout match to", value)
 
-        def handleMaxMemory(value: str | int):
-            print("DEBUG message - TODO Change max memory to", value)
+        def handleMaxMemory(value: str or int):
+            print_gomoku("DEBUG message - TODO Change max memory to", value)
 
-        def handleTimeLeft(value: str | int):
-            print("DEBUG message - TODO Change time left of the game to", value)
+        def handleTimeLeft(value: str or int):
+            print_gomoku("DEBUG message - TODO Change time left of the game to", value)
 
-        def handlegameType(value: str | int):
-            print("DEBUG message - TODO Change game type to", value)
+        def handlegameType(value: str or int):
+            print_gomoku("DEBUG message - TODO Change game type to", value)
 
-        def handleRule(value: str | int):
-            print("DEBUG message - TODO Change game rule to", value)
+        def handleRule(value: str or int):
+            print_gomoku("DEBUG message - TODO Change game rule to", value)
 
-        def handleEvaluate(value: str | int):
-            print("DEBUG message - TODO Evaluate ", value)
+        def handleEvaluate(value: str or int):
+            print_gomoku("DEBUG message - TODO Evaluate ", value)
 
-        def handleFolder(value: str | int):
-            print("DEBUG message - TODO Change persistent files folder to", value)
+        def handleFolder(value: str or int):
+            print_gomoku("DEBUG message - TODO Change persistent files folder to", value)
 
         key_dict = {
             "timeout_turn": handleTimeoutTurn,
@@ -124,9 +152,10 @@ class Game:
         }
 
         try:
-            key_dict[self.parser.getParsedInput()[1]](self.parser.getParsedInput()[2])
+            key_dict[self.parser.getParsedInput()[1]](
+                self.parser.getParsedInput()[2])
         except IndexError:
-            print("ERROR message - No key or no value was given")
+            print_gomoku("ERROR message - No key or no value was given")
             return False
         return True
 
@@ -134,6 +163,6 @@ class Game:
         exit(0)
 
     def about_command(self) -> bool:
-        print('name="Hugomoku", version="0.0.1", author="Nathan Rousseau, Johan Chrillesen, Guillaume Terrière", '
+        print_gomoku('name="Hugomoku", version="0.0.1", author="Nathan Rousseau, Johan Chrillesen, Guillaume Terrière", '
               'country="FR"')
         return True
