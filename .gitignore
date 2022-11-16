@@ -5,3 +5,6 @@ __pycache__/
 unit_tests.py
 .pytest_cache/
 *.spec
+build/
+dist/
+*.exe
