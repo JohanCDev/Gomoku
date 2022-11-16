@@ -4,3 +4,4 @@ __pycache__/
 .coverage
 unit_tests.py
 .pytest_cache/
+*.spec

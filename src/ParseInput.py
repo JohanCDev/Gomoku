@@ -29,7 +29,7 @@ class ParseInput:
 
         return self.__input
 
-    def getParsedInput(self) -> list:
+    def getParsedInput(self) -> list[str]:
         """Get the input parsed in a list of strings.
 
         Returns
