@@ -58,7 +58,7 @@ class Game:
                 print_gomoku("ERROR message - Unauthorized move")
                 return False
             for arg in parsed_args:
-                if int(arg) >= self.__boardSize:
+                if int(arg) >= self.__boardSize or int(arg) < 0:
                     print("ERROR message - Unauthorized move (invalid position)")
                     return False
             print_gomoku("DEBUG message - Valid TURN command")
@@ -72,6 +72,7 @@ class Game:
         except ValueError:
             print_gomoku("ERROR message - Position is not a number")
             return False
+        print(f'{self.__boardSize - 3}, {self.__boardSize - 2}')
         return True
 
     def begin_command(self) -> bool:
