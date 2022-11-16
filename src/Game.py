@@ -85,11 +85,35 @@ class Game:
 
     def board_command(self) -> bool:
 
+        def check_board_input(inpt):
+            pawnPos = inpt[0].split(',')
+            try:
+                if len(pawnPos) != 3:
+                    print_gomoku(pawnPos)
+                    raise ValueError
+                x = int(pawnPos[0])
+                y = int(pawnPos[1])
+                player = int(pawnPos[2])
+                if x < 0 or x >= self.__boardSize:
+                    raise ValueError
+                if y < 0 or y >= self.__boardSize:
+                    raise ValueError
+                if player not in [1, 2]:
+                    raise ValueError
+            except ValueError:
+                print_gomoku("DEBUG Message - Failure on Board Input")
+                return False
+            print_gomoku("DEBUG Message - Succes on Board Input")
+            return True
+
         while True:
             self.parser.askInput()
             inpt = self.parser.getParsedInput()
             if inpt[0] == "DONE":
+                print_gomoku("DEBUG Message - Exit BOARD")
                 break
+            if not check_board_input(inpt):
+                return False
         return True
 
     def info_command(self) -> bool:
