@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from src.GomokuBoard import *
 from src.ParseInput import ParseInput
 from src.Globals import *
 from src.utils.PrintGomoku import print_gomoku
@@ -7,6 +8,7 @@ from src.utils.PrintGomoku import print_gomoku
 class Game:
     def __init__(self):
         self.parser = ParseInput()
+        self.__boardManager = GomokuBoard(20)
         self.command_map = {
             "BOARD": self.board_command,
             "START": self.start_command,
@@ -17,30 +19,76 @@ class Game:
             "ABOUT": self.about_command
         }
         self.__boardSize = 0
-        self.__started : bool = False
+        self.__started: bool = False
+
+    def __check_win(self, pawnTypeToCheck: pawnType) -> bool:
+        def check_on_line(lineToCheck: list[pawnType]) -> bool:
+            nb: int = 0
+            for char in lineToCheck:
+                if char == pawnTypeToCheck:
+                    nb += 1
+                else:
+                    nb = 0
+                if nb == 5:
+                    return True
+            return False
+
+        def check_on_column(y: int) -> bool:
+            nb: int = 0
+            for x in range(0, self.__boardSize - 1):
+                if self.__boardManager.getPawn(x, y) == pawnTypeToCheck:
+                    nb += 1
+                else:
+                    nb = 0
+                if nb == 5:
+                    return True
+            return False
+
+        def check_diagonal() -> bool:
+            for i in range(self.__boardSize):
+                for j in range(len(self.__boardManager.boardMap[i])):
+                    if i + 4 < self.__boardSize and j + 4 < len(self.__boardManager.boardMap[i]):
+                        if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j+1] == self.__boardManager.boardMap[i+2][j+2] == self.__boardManager.boardMap[i+3][j+3] == self.__boardManager.boardMap[i+4][j+4] == pawnTypeToCheck:
+                            return True
+                    if i + 4 < self.__boardSize and j - 4 >= 0:
+                        if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j-1] == self.__boardManager.boardMap[i+2][j-2] == self.__boardManager.boardMap[i+3][j-3] == self.__boardManager.boardMap[i+4][j-4] == pawnTypeToCheck:
+                            return True
+            return False
+
+        for line in self.__boardManager.boardMap:
+            if check_on_line(line):
+                return True
+        for i in range(0, self.__boardSize - 1):
+            if check_on_column(i):
+                return True
+        if check_diagonal():
+            return True
+        return False
 
     def run(self) -> int:
         while True:
             try:
                 self.parser.askInput()
             except EOFError:
-                print('EOFError')
+                print_gomoku('EOFError')
                 break
             except KeyboardInterrupt:
-                print('KeyboardInterrupt')
+                print_gomoku('KeyboardInterrupt')
                 break
             try:
                 if self.parser.getParsedInput()[0] != "START" and not self.__started:
-                    print("DEBUG message - Please start the game with START command")
+                    print_gomoku(
+                        "DEBUG message - Please start the game with START command")
                     continue
                 self.command_map[self.parser.getParsedInput()[0]]()
             except KeyError:
-                print("UNKNOWN message - command ", self.parser.getParsedInput()[0], "not existing.")
+                print_gomoku("UNKNOWN message - command ",
+                             self.parser.getParsedInput()[0], "not existing.")
 
         return 0
 
     def start_command(self) -> bool:
-        boardSize : int = -1
+        boardSize: int = -1
         try:
             if len(self.parser.getParsedInput()) != 2:
                 raise ValueError
@@ -64,7 +112,8 @@ class Game:
                 return False
             for arg in parsed_args:
                 if int(arg) >= self.__boardSize or int(arg) < 0:
-                    print("ERROR message - Unauthorized move (invalid position)")
+                    print_gomoku(
+                        "ERROR message - Unauthorized move (invalid position)")
                     return False
             print_gomoku("DEBUG message - Valid TURN command")
             # Add movement to board
@@ -77,7 +126,7 @@ class Game:
         except ValueError:
             print_gomoku("ERROR message - Position is not a number")
             return False
-        print(f'{self.__boardSize - 3},{self.__boardSize - 2}')
+        print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
         return True
 
     def begin_command(self) -> bool:
@@ -132,7 +181,8 @@ class Game:
             print_gomoku("DEBUG message - TODO Change max memory to", value)
 
         def handleTimeLeft(value: str or int):
-            print_gomoku("DEBUG message - TODO Change time left of the game to", value)
+            print_gomoku(
+                "DEBUG message - TODO Change time left of the game to", value)
 
         def handlegameType(value: str or int):
             print_gomoku("DEBUG message - TODO Change game type to", value)
@@ -144,7 +194,8 @@ class Game:
             print_gomoku("DEBUG message - TODO Evaluate ", value)
 
         def handleFolder(value: str or int):
-            print_gomoku("DEBUG message - TODO Change persistent files folder to", value)
+            print_gomoku(
+                "DEBUG message - TODO Change persistent files folder to", value)
 
         key_dict = {
             "timeout_turn": handleTimeoutTurn,
@@ -169,7 +220,7 @@ class Game:
         exit(0)
 
     def about_command(self) -> bool:
-        print('name="{}", version="{}", author="{}", '
-              'country="{}"'.format(brainName, version, authors, country))
+        print_gomoku('name="{}", version="{}", author="{}", '
+                     'country="{}"'.format(brainName, version, authors, country))
 
         return True
