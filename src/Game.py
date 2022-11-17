@@ -45,10 +45,15 @@ class Game:
             return False
 
         def check_diagonal() -> bool:
+            if self.__boardManager.boardMap[0][0] == pawnTypeToCheck:
+                print("EQUALS")
             for i in range(self.__boardSize):
                 for j in range(len(self.__boardManager.boardMap[i])):
                     if i + 4 < self.__boardSize and j + 4 < len(self.__boardManager.boardMap[i]):
                         if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j+1] == self.__boardManager.boardMap[i+2][j+2] == self.__boardManager.boardMap[i+3][j+3] == self.__boardManager.boardMap[i+4][j+4] == pawnTypeToCheck:
+                            return True
+                    if i + 4 < self.__boardSize and j - 4 >= 0:
+                        if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j-1] == self.__boardManager.boardMap[i+2][j-2] == self.__boardManager.boardMap[i+3][j-3] == self.__boardManager.boardMap[i+4][j-4] == pawnTypeToCheck:
                             return True
             return False
 
