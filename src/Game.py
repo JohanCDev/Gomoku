@@ -70,19 +70,20 @@ class Game:
             try:
                 self.parser.askInput()
             except EOFError:
-                print('EOFError')
+                print_gomoku('EOFError')
                 break
             except KeyboardInterrupt:
-                print('KeyboardInterrupt')
+                print_gomoku('KeyboardInterrupt')
                 break
             try:
                 if self.parser.getParsedInput()[0] != "START" and not self.__started:
-                    print("DEBUG message - Please start the game with START command")
+                    print_gomoku(
+                        "DEBUG message - Please start the game with START command")
                     continue
                 self.command_map[self.parser.getParsedInput()[0]]()
             except KeyError:
-                print("UNKNOWN message - command ",
-                      self.parser.getParsedInput()[0], "not existing.")
+                print_gomoku("UNKNOWN message - command ",
+                             self.parser.getParsedInput()[0], "not existing.")
 
         return 0
 
@@ -111,7 +112,8 @@ class Game:
                 return False
             for arg in parsed_args:
                 if int(arg) >= self.__boardSize or int(arg) < 0:
-                    print("ERROR message - Unauthorized move (invalid position)")
+                    print_gomoku(
+                        "ERROR message - Unauthorized move (invalid position)")
                     return False
             print_gomoku("DEBUG message - Valid TURN command")
             # Add movement to board
@@ -124,7 +126,7 @@ class Game:
         except ValueError:
             print_gomoku("ERROR message - Position is not a number")
             return False
-        print(f'{self.__boardSize - 3},{self.__boardSize - 2}')
+        print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
         return True
 
     def begin_command(self) -> bool:
@@ -218,7 +220,7 @@ class Game:
         exit(0)
 
     def about_command(self) -> bool:
-        print('name="{}", version="{}", author="{}", '
-              'country="{}"'.format(brainName, version, authors, country))
+        print_gomoku('name="{}", version="{}", author="{}", '
+                     'country="{}"'.format(brainName, version, authors, country))
 
         return True
