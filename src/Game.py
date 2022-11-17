@@ -21,8 +21,8 @@ class Game:
         self.__boardSize = 0
         self.__started: bool = False
 
-    def __checkWin(self, pawnTypeToCheck: pawnType) -> bool:
-        def checkOnLine(lineToCheck: list[pawnType]) -> bool:
+    def __check_win(self, pawnTypeToCheck: pawnType) -> bool:
+        def check_on_line(lineToCheck: list[pawnType]) -> bool:
             nb: int = 0
             for char in lineToCheck:
                 if char == pawnTypeToCheck:
@@ -33,7 +33,7 @@ class Game:
                     return True
             return False
 
-        def checkOnColumn(y: int) -> bool:
+        def check_on_column(y: int) -> bool:
             nb: int = 0
             for x in range(0, self.__boardSize - 1):
                 if self.__boardManager.getPawn(x, y) == pawnTypeToCheck:
@@ -58,10 +58,10 @@ class Game:
             return False
 
         for line in self.__boardManager.boardMap:
-            if checkOnLine(line):
+            if check_on_line(line):
                 return True
         for i in range(0, self.__boardSize - 1):
-            if checkOnColumn(i):
+            if check_on_column(i):
                 return True
         if check_diagonal():
             return True
