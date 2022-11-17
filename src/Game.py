@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from GomokuBoard import *
+from src.GomokuBoard import *
 from src.ParseInput import ParseInput
 from src.Globals import *
 from src.utils.PrintGomoku import print_gomoku
@@ -8,7 +8,7 @@ from src.utils.PrintGomoku import print_gomoku
 class Game:
     def __init__(self):
         self.parser = ParseInput()
-        self.boardManager = GomokuBoard()
+        self.__boardManager = GomokuBoard(20)
         self.command_map = {
             "BOARD": self.board_command,
             "START": self.start_command,
@@ -22,7 +22,6 @@ class Game:
         self.__started: bool = False
 
     def __checkWin(self, pawnTypeToCheck: pawnType) -> bool:
-
         def checkOnLine(lineToCheck: list[pawnType]) -> bool:
             nb: int = 0
             for char in lineToCheck:
@@ -46,6 +45,11 @@ class Game:
             return False
 
         def check_diagonal() -> bool:
+            for i in range(self.__boardSize):
+                for j in range(len(self.__boardManager.boardMap[i])):
+                    if i + 4 < self.__boardSize and j + 4 < len(self.__boardManager.boardMap[i]):
+                        if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j+1] == self.__boardManager.boardMap[i+2][j+2] == self.__boardManager.boardMap[i+3][j+3] == self.__boardManager.boardMap[i+4][j+4] == pawnTypeToCheck:
+                            return True
             return False
 
         for line in self.__boardManager.boardMap:
