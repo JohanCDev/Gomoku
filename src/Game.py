@@ -102,6 +102,7 @@ class Game:
         self.__boardSize = boardSize
         print_gomoku("OK - everything is good")
         self.__started = True
+        self.__boardManager.resetBoard(self.__boardSize)
         return True
 
     def turn_command(self) -> bool:
