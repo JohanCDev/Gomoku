@@ -6,6 +6,10 @@ from src.Globals import *
 from src.utils.PrintGomoku import print_gomoku
 
 
+WIN = 5
+NAIVE = 4
+EXPLORE = 3
+
 class Game:
     def __init__(self):
         self.__started = True
@@ -30,7 +34,7 @@ class Game:
             rand_y = random.randrange(max_value)
         return rand_x, rand_y
 
-    def __check_win(self, pawn_type_to_check: pawnType) -> bool:
+    def __check_align(self, nb_alignn : int, pawn_type_to_check: pawnType) -> bool:
         def check_on_line(line_to_check: list[pawnType]) -> bool:
             nb: int = 0
             for char in line_to_check:
@@ -38,7 +42,7 @@ class Game:
                     nb += 1
                 else:
                     nb = 0
-                if nb == 5:
+                if nb == nb_alignn:
                     return True
             return False
 
@@ -49,18 +53,31 @@ class Game:
                     nb += 1
                 else:
                     nb = 0
-                if nb == 5:
+                if nb == nb_alignn:
                     return True
             return False
 
         def check_diagonal() -> bool:
+            
+            def check_one_diagonal(right : bool) -> bool:
+                aligned : bool = True
+                neg : int = 1
+                if not right:
+                    neg = -1
+
+                for k in range(0, nb_alignn):
+                    if not self.__boardManager.boardMap[i + k][j + (k * neg)] == pawn_type_to_check:
+                        aligned = False
+                if aligned:
+                    return True
+
             for i in range(self.__boardSize):
                 for j in range(len(self.__boardManager.boardMap[i])):
-                    if i + 4 < self.__boardSize and j + 4 < len(self.__boardManager.boardMap[i]):
-                        if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j+1] == self.__boardManager.boardMap[i+2][j+2] == self.__boardManager.boardMap[i+3][j+3] == self.__boardManager.boardMap[i+4][j+4] == pawn_type_to_check:
+                    if i + (nb_alignn -1) < self.__boardSize and j + (nb_alignn -1) < len(self.__boardManager.boardMap[i]):
+                        if check_one_diagonal(True):
                             return True
-                    if i + 4 < self.__boardSize and j - 4 >= 0:
-                        if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j-1] == self.__boardManager.boardMap[i+2][j-2] == self.__boardManager.boardMap[i+3][j-3] == self.__boardManager.boardMap[i+4][j-4] == pawn_type_to_check:
+                    if i + (nb_alignn -1) < self.__boardSize and j - (nb_alignn -1) >= 0:
+                        if check_one_diagonal(False):
                             return True
             return False
 
@@ -118,13 +135,13 @@ class Game:
             else:
                 self.__boardManager.add_manager_pawn(
                     int(parsed_args[0]), int(parsed_args[1]))
-            if self.__check_win(pawnType.MANAGER) == True:
+            if self.__check_align(WIN, pawnType.MANAGER) == True:
                 print_gomoku("Message message - You've win...")
                 self.end_command()
             rand_x, rand_y = self.__get_random_coords(self.__boardSize - 1)
             print_gomoku(f'{rand_x},{rand_y}')
             self.__boardManager.add_brain_pawn(rand_x, rand_y)
-            if self.__check_win(pawnType.BRAIN) == True:
+            if self.__check_align(WIN, pawnType.BRAIN) == True:
                 print_gomoku("Message message - I've win !")
                 self.end_command()
         except IndexError:
