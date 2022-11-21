@@ -66,8 +66,8 @@ class Game:
         return False
 
     def run(self) -> int:
-        print_gomoku(self.__boardManager)
         while True:
+            print_gomoku(self.__boardManager)
             try:
                 self.parser.askInput()
             except EOFError:
@@ -128,7 +128,9 @@ class Game:
         except ValueError:
             print_gomoku("ERROR message - Position is not a number")
             return False
+        self.__boardManager.addManagerPawn(int(parsed_args[0]), int(parsed_args[1]))
         print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
+        self.__boardManager.addBrainPawn(self.__boardSize - 1, self.__boardSize - 4)
         return True
 
     def begin_command(self) -> bool:
@@ -136,6 +138,7 @@ class Game:
         # Place AI decision on board
         # Answer as pos_x,pos_y
         print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
+        self.__boardManager.addBrainPawn(self.__boardSize - 3, self.__boardSize - 2)
         print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 
@@ -159,6 +162,10 @@ class Game:
             except ValueError:
                 print_gomoku("DEBUG Message - Failure on Board Input")
                 return False
+            if player == 1:
+                self.__boardManager.addBrainPawn(x, y)
+            else:
+                self.__boardManager.addManagerPawn(x, y)
             print_gomoku("DEBUG Message - Succes on Board Input")
             return True
 
