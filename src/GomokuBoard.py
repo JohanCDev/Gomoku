@@ -15,9 +15,9 @@ class GomokuBoard:
             raise RuntimeError("The given value can't be a Gomoku board size")
         self.__boardSize = boardSize
         self.boardMap = [[]]
-        self.resetBoard()
+        self.reset_board()
 
-    def __checkPos(self, x: int, y: int) -> bool:
+    def __check_pos(self, x: int, y: int) -> bool:
         """ Private Method, useful to check if the given coordinates are allowed """
         if x >= self.__boardSize or x < 0:
             return False
@@ -25,44 +25,44 @@ class GomokuBoard:
             return False
         return True
 
-    def __isEmpty(self, x: int, y: int) -> bool:
+    def __is_empty(self, x: int, y: int) -> bool:
         """ Private Method, check if the pawn on the given coordinates is empty """
-        if not self.__checkPos(x, y):
+        if not self.__check_pos(x, y):
             return False
         if self.boardMap[x][y] != pawnType.EMPTY:
             return False
         return True
 
-    def __addPawn(self, x: int, y: int, type):
+    def __add_pawn(self, x: int, y: int, type):
         """ Add a pawn at the given coordinates """
-        if not self.__checkPos(x, y):
+        if not self.__check_pos(x, y):
             raise RuntimeError('Invalid Coordinate')
-        if not self.__isEmpty(x, y):
+        if not self.__is_empty(x, y):
             raise RuntimeError('Cell is not empty')
         self.boardMap[x][y] = type
 
-    def addBrainPawn(self, x: int, y: int):
+    def add_brain_pawn(self, x: int, y: int):
         """ Add a Brain Pawn at the given coordinates """
-        self.__addPawn(x, y, pawnType.BRAIN)
+        self.__add_pawn(x, y, pawnType.BRAIN)
 
-    def addManagerPawn(self, x: int, y: int):
+    def add_manager_pawn(self, x: int, y: int):
         """ Add a Manager Pawn at the given coordinates"""
-        self.__addPawn(x, y, pawnType.MANAGER)
+        self.__add_pawn(x, y, pawnType.MANAGER)
 
-    def resetBoard(self, boardSize: int = -1):
+    def reset_board(self, boardSize: int = -1):
         """ Reset completly the board, setting all the cells to empty state """
         if boardSize == -1:
             boardSize = self.__boardSize
         self.__boardSize = boardSize
         self.boardMap = [[pawnType.EMPTY] * boardSize for i in range(boardSize)]
 
-    def getPawn(self, x: int, y: int):
+    def get_pawn(self, x: int, y: int):
         """ Get the Pawn at the given coordinates """
-        if not self.__checkPos(x, y):
+        if not self.__check_pos(x, y):
             return RuntimeError("The pawn can't be get with the given coordinates")
         return self.boardMap[x][y]
 
-    def getBoardSize(self) -> int:
+    def get_board_size(self) -> int:
         """ Get the Board Size """
         return self.__boardSize
 
