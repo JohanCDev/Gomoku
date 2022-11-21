@@ -18,8 +18,7 @@ class Game:
             "END": self.end_command,
             "ABOUT": self.about_command
         }
-        self.__boardSize = 0
-        self.__started: bool = False
+        self.__boardSize = 20
 
     def __check_win(self, pawnTypeToCheck: pawnType) -> bool:
         def check_on_line(lineToCheck: list[pawnType]) -> bool:
@@ -67,19 +66,8 @@ class Game:
 
     def run(self) -> int:
         while True:
+            self.parser.askInput()
             try:
-                self.parser.askInput()
-            except EOFError:
-                print_gomoku('EOFError')
-                break
-            except KeyboardInterrupt:
-                print_gomoku('KeyboardInterrupt')
-                break
-            try:
-                if self.parser.getParsedInput()[0] != "START" and not self.__started:
-                    print_gomoku(
-                        "DEBUG message - Please start the game with START command")
-                    continue
                 self.command_map[self.parser.getParsedInput()[0]]()
             except KeyError:
                 print_gomoku("UNKNOWN message - command ",

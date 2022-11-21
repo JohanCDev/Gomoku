@@ -15,7 +15,13 @@ class ParseInput:
     def askInput(self) -> None:
         """Ask the user its input, it will be parsed in this function"""
 
-        self.__input = input()
+        try:
+            self.__input = input()
+        except EOFError:
+            exit(0)
+        except KeyboardInterrupt:
+            exit(0)
+
         self.__parsedInput = self.__input.rstrip().split(" ")
 
     def getInput(self) -> str:
