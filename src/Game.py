@@ -7,6 +7,7 @@ from src.utils.PrintGomoku import print_gomoku
 
 class Game:
     def __init__(self):
+        self.__started = True
         self.parser = ParseInput()
         self.__boardManager = GomokuBoard(20)
         self.command_map = {
@@ -18,14 +19,13 @@ class Game:
             "END": self.end_command,
             "ABOUT": self.about_command
         }
-        self.__boardSize = 0
-        self.__started: bool = False
+        self.__boardSize = 20
 
-    def __check_win(self, pawnTypeToCheck: pawnType) -> bool:
-        def check_on_line(lineToCheck: list[pawnType]) -> bool:
+    def __check_win(self, pawn_type_to_check: pawnType) -> bool:
+        def check_on_line(line_to_check: list[pawnType]) -> bool:
             nb: int = 0
-            for char in lineToCheck:
-                if char == pawnTypeToCheck:
+            for char in line_to_check:
+                if char == pawn_type_to_check:
                     nb += 1
                 else:
                     nb = 0
@@ -36,7 +36,7 @@ class Game:
         def check_on_column(y: int) -> bool:
             nb: int = 0
             for x in range(0, self.__boardSize - 1):
-                if self.__boardManager.getPawn(x, y) == pawnTypeToCheck:
+                if self.__boardManager.getPawn(x, y) == pawn_type_to_check:
                     nb += 1
                 else:
                     nb = 0
@@ -48,10 +48,10 @@ class Game:
             for i in range(self.__boardSize):
                 for j in range(len(self.__boardManager.boardMap[i])):
                     if i + 4 < self.__boardSize and j + 4 < len(self.__boardManager.boardMap[i]):
-                        if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j+1] == self.__boardManager.boardMap[i+2][j+2] == self.__boardManager.boardMap[i+3][j+3] == self.__boardManager.boardMap[i+4][j+4] == pawnTypeToCheck:
+                        if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j+1] == self.__boardManager.boardMap[i+2][j+2] == self.__boardManager.boardMap[i+3][j+3] == self.__boardManager.boardMap[i+4][j+4] == pawn_type_to_check:
                             return True
                     if i + 4 < self.__boardSize and j - 4 >= 0:
-                        if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j-1] == self.__boardManager.boardMap[i+2][j-2] == self.__boardManager.boardMap[i+3][j-3] == self.__boardManager.boardMap[i+4][j-4] == pawnTypeToCheck:
+                        if self.__boardManager.boardMap[i][j] == self.__boardManager.boardMap[i+1][j-1] == self.__boardManager.boardMap[i+2][j-2] == self.__boardManager.boardMap[i+3][j-3] == self.__boardManager.boardMap[i+4][j-4] == pawn_type_to_check:
                             return True
             return False
 
@@ -68,41 +68,28 @@ class Game:
     def run(self) -> int:
         while True:
             print_gomoku(self.__boardManager)
+            self.parser.askInput()
             try:
-                self.parser.askInput()
-            except EOFError:
-                print_gomoku('EOFError')
-                break
-            except KeyboardInterrupt:
-                print_gomoku('KeyboardInterrupt')
-                break
-            try:
-                if self.parser.getParsedInput()[0] != "START" and not self.__started:
-                    print_gomoku(
-                        "DEBUG message - Please start the game with START command")
-                    continue
                 self.command_map[self.parser.getParsedInput()[0]]()
             except KeyError:
                 print_gomoku("UNKNOWN message - command ",
                              self.parser.getParsedInput()[0], "not existing.")
 
-        return 0
 
     def start_command(self) -> bool:
-        boardSize: int = -1
+        board_size: int = -1
         try:
             if len(self.parser.getParsedInput()) != 2:
                 raise ValueError
-            boardSize = int(self.parser.getParsedInput()[1])
-            if boardSize < 5:
+            board_size = int(self.parser.getParsedInput()[1])
+            if board_size < 5:
                 raise ValueError
         except ValueError:
             print_gomoku("ERROR message - unsupported size or other error")
             return False
         # Create board
-        self.__boardSize = boardSize
+        self.__boardSize = board_size
         print_gomoku("OK - everything is good")
-        self.__started = True
         self.__boardManager.resetBoard(self.__boardSize)
         return True
 
@@ -118,10 +105,10 @@ class Game:
                         "ERROR message - Unauthorized move (invalid position)")
                     return False
             print_gomoku("DEBUG message - Valid TURN command")
-            # Add movement to board
-            # Launch AI reflexion
-            # Place AI decision on board
-            # Answer as pos_x,pos_y
+            # TODO Add movement to board
+            # TODO Launch AI reflexion
+            # TODO Place AI decision on board
+            # TODO Answer as pos_x,pos_y
         except IndexError:
             print_gomoku("ERROR message - No movement was given")
             return False
@@ -134,9 +121,9 @@ class Game:
         return True
 
     def begin_command(self) -> bool:
-        # Launch AI reflexion
-        # Place AI decision on board
-        # Answer as pos_x,pos_y
+        # TODO Launch AI reflexion
+        # TODO Place AI decision on board
+        # TODO Answer as pos_x,pos_y
         print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
         self.__boardManager.addBrainPawn(self.__boardSize - 3, self.__boardSize - 2)
         print_gomoku("DEBUG message - Valid BEGIN command")
@@ -180,41 +167,41 @@ class Game:
         return True
 
     def info_command(self) -> bool:
-        def handleTimeoutTurn(value: str or int):
+        def handle_timeout_turn(value: str or int):
             print_gomoku("DEBUG message - TODO Change timeout turn to", value)
 
-        def handleTimeoutMatch(value: str or int):
+        def handle_timeout_match(value: str or int):
             print_gomoku("DEBUG message - TODO Change timeout match to", value)
 
-        def handleMaxMemory(value: str or int):
+        def handle_max_memory(value: str or int):
             print_gomoku("DEBUG message - TODO Change max memory to", value)
 
-        def handleTimeLeft(value: str or int):
+        def handle_time_left(value: str or int):
             print_gomoku(
                 "DEBUG message - TODO Change time left of the game to", value)
 
-        def handlegameType(value: str or int):
+        def handle_game_type(value: str or int):
             print_gomoku("DEBUG message - TODO Change game type to", value)
 
-        def handleRule(value: str or int):
+        def handle_rule(value: str or int):
             print_gomoku("DEBUG message - TODO Change game rule to", value)
 
-        def handleEvaluate(value: str or int):
+        def handle_evaluate(value: str or int):
             print_gomoku("DEBUG message - TODO Evaluate ", value)
 
-        def handleFolder(value: str or int):
+        def handle_folder(value: str or int):
             print_gomoku(
                 "DEBUG message - TODO Change persistent files folder to", value)
 
         key_dict = {
-            "timeout_turn": handleTimeoutTurn,
-            "timeout_match": handleTimeoutMatch,
-            "max_memory": handleMaxMemory,
-            "time_left": handleTimeLeft,
-            "game_type": handlegameType,
-            "rule": handleRule,
-            "evaluate": handleEvaluate,
-            "folder": handleFolder
+            "timeout_turn": handle_timeout_turn,
+            "timeout_match": handle_timeout_match,
+            "max_memory": handle_max_memory,
+            "time_left": handle_time_left,
+            "game_type": handle_game_type,
+            "rule": handle_rule,
+            "evaluate": handle_evaluate,
+            "folder": handle_folder
         }
 
         try:
@@ -231,5 +218,4 @@ class Game:
     def about_command(self) -> bool:
         print_gomoku('name="{}", version="{}", author="{}", '
                      'country="{}"'.format(brainName, version, authors, country))
-
         return True
