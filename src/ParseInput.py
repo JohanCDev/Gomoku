@@ -12,7 +12,7 @@ class ParseInput:
         self.__input: str = ""
         self.__parsedInput: list = []
 
-    def askInput(self) -> None:
+    def ask_input(self) -> None:
         """Ask the user its input, it will be parsed in this function"""
 
         try:
@@ -24,7 +24,7 @@ class ParseInput:
 
         self.__parsedInput = self.__input.rstrip().split(" ")
 
-    def getInput(self) -> str:
+    def get_input(self) -> str:
         """Get the value of the previous input
 
         Returns
@@ -35,7 +35,7 @@ class ParseInput:
 
         return self.__input
 
-    def getParsedInput(self) -> list[str]:
+    def get_parsed_input(self) -> list[str]:
         """Get the input parsed in a list of strings.
 
         Returns
@@ -46,7 +46,7 @@ class ParseInput:
 
         return self.__parsedInput
 
-    def setInput(self, value: str) -> None:
+    def set_input(self, value: str) -> None:
         """Function made for tests. It will allow us to not use the input() function.
 
         Parameters

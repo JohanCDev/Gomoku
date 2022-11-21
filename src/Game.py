@@ -36,7 +36,7 @@ class Game:
         def check_on_column(y: int) -> bool:
             nb: int = 0
             for x in range(0, self.__boardSize - 1):
-                if self.__boardManager.getPawn(x, y) == pawn_type_to_check:
+                if self.__boardManager.get_pawn(x, y) == pawn_type_to_check:
                     nb += 1
                 else:
                     nb = 0
@@ -67,21 +67,21 @@ class Game:
 
     def run(self) -> int:
         while True:
-            self.parser.askInput()
+            print_gomoku(self.__boardManager)
+            self.parser.ask_input()
             try:
-                self.command_map[self.parser.getParsedInput()[0]]()
+                self.command_map[self.parser.get_parsed_input()[0]]()
             except KeyError:
                 print_gomoku("UNKNOWN message - command ",
-                             self.parser.getParsedInput()[0], "not existing.")
+                             self.parser.get_parsed_input()[0], "not existing.")
 
-        return 0
 
     def start_command(self) -> bool:
         board_size: int = -1
         try:
-            if len(self.parser.getParsedInput()) != 2:
+            if len(self.parser.get_parsed_input()) != 2:
                 raise ValueError
-            board_size = int(self.parser.getParsedInput()[1])
+            board_size = int(self.parser.get_parsed_input()[1])
             if board_size < 5:
                 raise ValueError
         except ValueError:
@@ -90,12 +90,12 @@ class Game:
         # Create board
         self.__boardSize = board_size
         print_gomoku("OK - everything is good")
-        self.__boardManager.resetBoard(self.__boardSize)
+        self.__boardManager.reset_board(self.__boardSize)
         return True
 
     def turn_command(self) -> bool:
         try:
-            parsed_args = self.parser.getParsedInput()[1].split(",")
+            parsed_args = self.parser.get_parsed_input()[1].split(",")
             if len(parsed_args) != 2:
                 print_gomoku("ERROR message - Unauthorized move")
                 return False
@@ -115,7 +115,9 @@ class Game:
         except ValueError:
             print_gomoku("ERROR message - Position is not a number")
             return False
+        self.__boardManager.add_manager_pawn(int(parsed_args[0]), int(parsed_args[1]))
         print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
+        self.__boardManager.add_brain_pawn(self.__boardSize - 1, self.__boardSize - 4)
         return True
 
     def begin_command(self) -> bool:
@@ -123,6 +125,7 @@ class Game:
         # TODO Place AI decision on board
         # TODO Answer as pos_x,pos_y
         print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
+        self.__boardManager.add_brain_pawn(self.__boardSize - 3, self.__boardSize - 2)
         print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 
@@ -146,12 +149,16 @@ class Game:
             except ValueError:
                 print_gomoku("DEBUG Message - Failure on Board Input")
                 return False
+            if player == 1:
+                self.__boardManager.add_brain_pawn(x, y)
+            else:
+                self.__boardManager.add_manager_pawn(x, y)
             print_gomoku("DEBUG Message - Succes on Board Input")
             return True
 
         while True:
-            self.parser.askInput()
-            inpt = self.parser.getParsedInput()
+            self.parser.ask_input()
+            inpt = self.parser.get_parsed_input()
             if inpt[0] == "DONE":
                 print_gomoku("DEBUG Message - Exit BOARD")
                 break
@@ -198,8 +205,8 @@ class Game:
         }
 
         try:
-            key_dict[self.parser.getParsedInput()[1]](
-                self.parser.getParsedInput()[2])
+            key_dict[self.parser.get_parsed_input()[1]](
+                self.parser.get_parsed_input()[2])
         except IndexError:
             print_gomoku("ERROR message - No key or no value was given")
             return False

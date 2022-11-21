@@ -13,22 +13,22 @@ def test_board_init():
         secondBoard = GomokuBoard(4)
     except RuntimeError:
         pass
-    assert firstBoard.getBoardSize() is 10
+    assert firstBoard.get_board_size() is 10
 
 
 def test_add_pawn():
     board = GomokuBoard(5)
-    board.addBrainPawn(1, 1)
+    board.add_brain_pawn(1, 1)
     try:
-        board.addManagerPawn(5, 5)
+        board.add_manager_pawn(5, 5)
     except RuntimeError:
         pass
-    assert board.getPawn(1, 1) == pawnType.BRAIN
+    assert board.get_pawn(1, 1) == pawnType.BRAIN
 
 def test_reset_board():
     board = GomokuBoard(5)
-    board.addBrainPawn(1, 1)
-    board.resetBoard()
+    board.add_brain_pawn(1, 1)
+    board.reset_board()
     for line in board.boardMap:
         for cell in line:
             assert cell is pawnType.EMPTY
