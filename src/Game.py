@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import random
 from src.GomokuBoard import *
 from src.ParseInput import ParseInput
 from src.Globals import *
@@ -20,6 +21,14 @@ class Game:
             "ABOUT": self.about_command
         }
         self.__boardSize = 20
+
+    def __get_random_coords(self, max_value: int):
+        rand_x = random.randrange(max_value)
+        rand_y = random.randrange(max_value)
+        while self.__boardManager.get_pawn(rand_x, rand_y) != pawnType.EMPTY:
+            rand_x = random.randrange(max_value)
+            rand_y = random.randrange(max_value)
+        return rand_x, rand_y
 
     def __check_win(self, pawn_type_to_check: pawnType) -> bool:
         def check_on_line(line_to_check: list[pawnType]) -> bool:
@@ -75,7 +84,6 @@ class Game:
                 print_gomoku("UNKNOWN message - command ",
                              self.parser.get_parsed_input()[0], "not existing.")
 
-
     def start_command(self) -> bool:
         board_size: int = -1
         try:
@@ -87,7 +95,6 @@ class Game:
         except ValueError:
             print_gomoku("ERROR message - unsupported size or other error")
             return False
-        # Create board
         self.__boardSize = board_size
         print_gomoku("OK - everything is good")
         self.__boardManager.reset_board(self.__boardSize)
@@ -105,27 +112,36 @@ class Game:
                         "ERROR message - Unauthorized move (invalid position)")
                     return False
             print_gomoku("DEBUG message - Valid TURN command")
-            # TODO Add movement to board
-            # TODO Launch AI reflexion
-            # TODO Place AI decision on board
-            # TODO Answer as pos_x,pos_y
+            if self.__boardManager.get_pawn(int(parsed_args[0]), int(parsed_args[1])) != pawnType.EMPTY:
+                print_gomoku("ERROR message - This cell is already taken")
+                return False
+            else:
+                self.__boardManager.add_manager_pawn(
+                    int(parsed_args[0]), int(parsed_args[1]))
+            if self.__check_win(pawnType.MANAGER) == True:
+                print_gomoku("Message message - You've win...")
+                self.end_command()
+            rand_x, rand_y = self.__get_random_coords(self.__boardSize - 1)
+            print_gomoku(f'{rand_x},{rand_y}')
+            self.__boardManager.add_brain_pawn(rand_x, rand_y)
+            if self.__check_win(pawnType.BRAIN) == True:
+                print_gomoku("Message message - I've win !")
+                self.end_command()
         except IndexError:
             print_gomoku("ERROR message - No movement was given")
             return False
         except ValueError:
             print_gomoku("ERROR message - Position is not a number")
             return False
-        self.__boardManager.add_manager_pawn(int(parsed_args[0]), int(parsed_args[1]))
-        print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
-        self.__boardManager.add_brain_pawn(self.__boardSize - 1, self.__boardSize - 4)
+        except RuntimeError:
+            print_gomoku("ERROR message - Runtime error of getPawn")
+            return False
         return True
 
     def begin_command(self) -> bool:
-        # TODO Launch AI reflexion
-        # TODO Place AI decision on board
-        # TODO Answer as pos_x,pos_y
-        print_gomoku(f'{self.__boardSize - 3},{self.__boardSize - 2}')
-        self.__boardManager.add_brain_pawn(self.__boardSize - 3, self.__boardSize - 2)
+        rand_x, rand_y = self.__get_random_coords(self.__boardSize - 1)
+        print_gomoku(f'{rand_x},{rand_y}')
+        self.__boardManager.add_brain_pawn(rand_x, rand_y)
         print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 
