@@ -64,3 +64,14 @@ class GomokuBoard:
     def getBoardSize(self) -> int:
         """ Get the Board Size """
         return self.__boardSize
+
+    def __str__(self):
+        """ Pass the board as string to be displayed """
+        toPrint : str = f"Current board (size {self.__boardSize}):\n"
+        toPrint += "0 is Empty / 1 is Brain / 2 is Manager\n"
+        for lines in self.boardMap:
+            for cell in lines:
+                toPrint += f'[{cell.value}]'
+            toPrint += '\n'
+        toPrint = toPrint[:-1]
+        return toPrint

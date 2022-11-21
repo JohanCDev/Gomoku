@@ -66,6 +66,7 @@ class Game:
         return False
 
     def run(self) -> int:
+        print_gomoku(self.__boardManager)
         while True:
             try:
                 self.parser.askInput()
