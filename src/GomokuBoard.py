@@ -53,6 +53,7 @@ class GomokuBoard:
         """ Reset completly the board, setting all the cells to empty state """
         if boardSize == -1:
             boardSize = self.__boardSize
+        self.__boardSize = boardSize
         self.boardMap = [[pawnType.EMPTY] * boardSize for i in range(boardSize)]
 
     def getPawn(self, x: int, y: int):
@@ -66,12 +67,20 @@ class GomokuBoard:
         return self.__boardSize
 
     def __str__(self):
+        BLUE = '\033[94m'
+        RED = "\033[1;31;40m"
+        WHITE =  "\033[0;37;40m"
         """ Pass the board as string to be displayed """
         toPrint : str = f"Current board (size {self.__boardSize}):\n"
         toPrint += "0 is Empty / 1 is Brain / 2 is Manager\n"
         for lines in self.boardMap:
             for cell in lines:
-                toPrint += f'[{cell.value}]'
+                value : str = f'[{cell.value}]' + WHITE
+                if cell == pawnType.BRAIN:
+                    value = RED + value
+                if cell == pawnType.MANAGER:
+                    value = BLUE + value
+                toPrint += f'{value}'
             toPrint += '\n'
         toPrint = toPrint[:-1]
         return toPrint
