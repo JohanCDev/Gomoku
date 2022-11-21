@@ -120,11 +120,13 @@ class Game:
                     int(parsed_args[0]), int(parsed_args[1]))
             if self.__check_win(pawnType.MANAGER) == True:
                 print("Message message - You've win...")
+                self.end_command()
             rand_x, rand_y = self.__get_random_coords(self.__boardSize - 1)
             print_gomoku(f'{rand_x},{rand_y}')
             self.__boardManager.add_brain_pawn(rand_x, rand_y)
             if self.__check_win(pawnType.BRAIN) == True:
                 print("Message message - I've win !")
+                self.end_command()
         except IndexError:
             print_gomoku("ERROR message - No movement was given")
             return False
@@ -141,8 +143,6 @@ class Game:
         print_gomoku(f'{rand_x},{rand_y}')
         self.__boardManager.add_brain_pawn(rand_x, rand_y)
         print_gomoku("DEBUG message - Valid BEGIN command")
-        if self.__check_win(pawnType.BRAIN) == True:
-            print("Message message - I've win !")
         return True
 
     def board_command(self) -> bool:
