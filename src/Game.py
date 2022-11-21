@@ -30,7 +30,7 @@ class Game:
             rand_y = random.randrange(max_value)
         return rand_x, rand_y
 
-    def __check_win(self, pawn_type_to_check: pawnType) -> bool:
+    def check_win(self, pawn_type_to_check: pawnType) -> bool:
         def check_on_line(line_to_check: list[pawnType]) -> bool:
             nb: int = 0
             for char in line_to_check:
@@ -118,13 +118,13 @@ class Game:
             else:
                 self.__boardManager.add_manager_pawn(
                     int(parsed_args[0]), int(parsed_args[1]))
-            if self.__check_win(pawnType.MANAGER) == True:
+            if self.check_win(pawnType.MANAGER) == True:
                 print_gomoku("Message message - You've win...")
                 self.end_command()
             rand_x, rand_y = self.__get_random_coords(self.__boardSize - 1)
             print_gomoku(f'{rand_x},{rand_y}')
             self.__boardManager.add_brain_pawn(rand_x, rand_y)
-            if self.__check_win(pawnType.BRAIN) == True:
+            if self.check_win(pawnType.BRAIN) == True:
                 print_gomoku("Message message - I've win !")
                 self.end_command()
         except IndexError:
@@ -235,3 +235,6 @@ class Game:
         print_gomoku('name="{}", version="{}", author="{}", '
                      'country="{}"'.format(brainName, version, authors, country))
         return True
+
+    def get_board_manager(self):
+        return self.__boardManager

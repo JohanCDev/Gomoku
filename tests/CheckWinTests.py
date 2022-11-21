@@ -1,0 +1,168 @@
+#!/usr/bin/env python3
+from src.Game import Game
+from src.GomokuBoard import pawnType
+
+
+def run_check_win_tests():
+    test_basic_diagonal_win()
+    test_basic_line_win()
+    test_basic_col_win()
+    test_huge_diagonal_win()
+    test_huge_line_win()
+    test_huge_col_win()
+
+
+def test_basic_diagonal_win():
+    game = Game()
+    game.get_board_manager().reset_board(5)
+    game.get_board_manager().boardMap = [
+        [pawnType.BRAIN, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.BRAIN, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN,
+            pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.BRAIN, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.BRAIN],
+    ]
+    game.__boardSize = 5
+    game.get_board_manager().__boardSize = 5
+    assert game.check_win(pawnType.BRAIN) == True, game.check_win(
+        pawnType.MANAGER) == False
+
+
+def test_basic_line_win():
+    game = Game()
+    game.get_board_manager().reset_board(5)
+    game.get_board_manager().boardMap = [
+        [pawnType.BRAIN, pawnType.BRAIN, pawnType.BRAIN,
+            pawnType.BRAIN, pawnType.BRAIN],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN,
+            pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.BRAIN, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.BRAIN],
+    ]
+    game.__boardSize = 5
+    game.get_board_manager().__boardSize = 5
+    assert game.check_win(pawnType.BRAIN) == True, game.check_win(
+        pawnType.MANAGER) == False
+
+
+def test_basic_col_win():
+    game = Game()
+    game.get_board_manager().reset_board(5)
+    game.get_board_manager().boardMap = [
+        [pawnType.BRAIN, pawnType.EMPTY, pawnType.BRAIN,
+            pawnType.BRAIN, pawnType.BRAIN],
+        [pawnType.BRAIN, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.BRAIN, pawnType.EMPTY, pawnType.BRAIN,
+            pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.BRAIN, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.BRAIN, pawnType.EMPTY],
+        [pawnType.BRAIN, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.BRAIN],
+    ]
+    game.__boardSize = 5
+    game.get_board_manager().__boardSize = 5
+    assert game.check_win(pawnType.BRAIN) == True, game.check_win(
+        pawnType.MANAGER) == False
+
+
+def test_huge_col_win():
+    game = Game()
+    game.get_board_manager().reset_board(10)
+    game.get_board_manager().boardMap = [
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+    ]
+    game.__boardSize = 10
+    game.get_board_manager().__boardSize = 10
+    assert game.check_win(pawnType.BRAIN) == True, game.check_win(
+        pawnType.MANAGER) == False
+
+
+def test_huge_line_win():
+    game = Game()
+    game.get_board_manager().reset_board(10)
+    game.get_board_manager().boardMap = [
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN, pawnType.BRAIN,
+            pawnType.BRAIN, pawnType.BRAIN, pawnType.BRAIN, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+    ]
+    game.__boardSize = 10
+    game.get_board_manager().__boardSize = 10
+    assert game.check_win(pawnType.BRAIN) == True, game.check_win(
+        pawnType.MANAGER) == False
+
+
+def test_huge_diagonal_win():
+    game = Game()
+    game.get_board_manager().reset_board(10)
+    game.get_board_manager().boardMap = [
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.BRAIN, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.BRAIN, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
+            pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY],
+    ]
+    game.__boardSize = 10
+    game.get_board_manager().__boardSize = 10
+    assert game.check_win(pawnType.BRAIN) == True, game.check_win(
+        pawnType.MANAGER) == False
