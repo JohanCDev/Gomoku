@@ -146,14 +146,10 @@ class Brain:
             if found:
                 return LINE, x, y
             column = self.board.get_column(x)
-            for i in range(0, len(column)):
-                print(column[i])
-            print("----------------")
             found, y = self.__check_lines(nb_align, column, pawn_type_to_check)
             if found:
                 return COLUMN, y, x
             x += 1
-        print("#################")
         found, x, y = self.__check_diagonals(nb_align, pawn_type_to_check)
         if found != NONE:
             return found, x, y
