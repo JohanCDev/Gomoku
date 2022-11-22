@@ -69,9 +69,9 @@ class GomokuBoard:
         """ Get the Board Size """
         return self.__boardSize
 
-    def get_column(self, x: int) -> list:
+    def get_column(self, y: int) -> list:
         column = []
-        for y in range(0, self.__boardSize):
+        for x in range(0, self.__boardSize):
             column.append(self.boardMap[x][y])
         return column
 
@@ -80,8 +80,8 @@ class GomokuBoard:
         RED = "\033[1;31;40m"
         WHITE = "\033[0;37;40m"
         """ Pass the board as string to be displayed """
-        toPrint: str = f"Current board (size {self.__boardSize}):\n"
-        toPrint += "0 is Empty / 1 is Brain / 2 is Manager\n"
+        toPrint: str = f"DEBUG - Current board (size {self.__boardSize}):\n"
+        toPrint += "DEBUG - 0 is Empty / 1 is Brain / 2 is Manager\n"
         for lines in self.boardMap:
             toPrint += 'DEBUG - '
             for cell in lines:
