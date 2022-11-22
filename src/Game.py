@@ -186,3 +186,7 @@ class Game:
 
     def get_board_manager(self):
         return self.__brain.board
+
+    """ ONLY FOR TESTS"""
+    def get_brain(self):
+        return self.__brain
