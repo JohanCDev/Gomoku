@@ -5,6 +5,7 @@ from src.Globals import *
 from src.utils.PrintGomoku import print_gomoku
 from src.Brain import Brain
 
+
 class Game:
     def __init__(self):
         self.parser = ParseInput()
@@ -88,7 +89,9 @@ class Game:
         return True
 
     def begin_command(self) -> bool:
-        self.__brain.act(True)
+        self.__brain.board.add_brain_pawn(
+            int(self.__brain.boardSize / 2), int(self.__brain.boardSize / 2))
+        print_gomoku(self.__brain.board)
         print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 
@@ -127,6 +130,7 @@ class Game:
                 break
             if not check_board_input(inpt):
                 return False
+        self.__brain.act()
         return True
 
     def info_command(self) -> bool:
@@ -188,5 +192,6 @@ class Game:
         return self.__brain.board
 
     """ ONLY FOR TESTS"""
+
     def get_brain(self):
         return self.__brain
