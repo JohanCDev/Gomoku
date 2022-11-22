@@ -44,7 +44,7 @@ class Brain:
                 tmp_first = first_nb
                 first_nb = -1
                 empty_cell = y
-            if tmp_first + second_nb + 1 == nb_align and nb_align == WIN:
+            if tmp_first + second_nb + 1 == nb_align:
                 return True, empty_cell
             if first_nb == nb_align and nb_align == WIN:
                 return True, 0
