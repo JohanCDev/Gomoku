@@ -25,46 +25,19 @@ class Brain:
         self.boardSize = boardSize
 
     def __check_lines(self, nb_align, line_to_check, searched_pawn_type):
-        tmp_first: int = -1
-        first_nb: int = -1
-        second_nb: int = 0
-        first: int = 0
-        empty_cell: int = -1
-        y: int = 0
-        for y in range(0, len(line_to_check)):
-            if line_to_check[y] == searched_pawn_type:
-                if first_nb == 0:
-                    first = y
-                if first_nb == -1:
-                    first_nb += 2
-                elif first_nb != 0:
-                    first_nb += 1
-                else:
-                    second_nb += 1
-            else:
-                tmp_first = first_nb
-                first_nb = -1
-                empty_cell = y
-            if tmp_first + second_nb + 1 == nb_align:
-                return True, empty_cell
-            if first_nb == nb_align and nb_align == WIN:
-                return True, 0
-            elif first_nb == nb_align:
-                rightFree = True
-                leftFree = True
-                if y + 1 < len(line_to_check):
-                    if line_to_check[y + 1] != searched_pawn_type and line_to_check[y + 1] != pawnType.EMPTY:
-                        rightFree = False
-                if first - 1 >= 0:
-                    if line_to_check[first - 1] != searched_pawn_type and line_to_check[first - 1] != pawnType.EMPTY:
-                        leftFree = False
-                if rightFree and not (y + 1 == len(line_to_check)):
-                    return True, y + 1
-                elif leftFree and not (first - 1 < 0):
-                    return True, first - 1
-                else:
-                    first_nb = 0
-            y += 1
+        nb: int = 0
+        coord: int = -1
+        for y in range(0, len(line_to_check) - 4):
+            aligns = line_to_check[y:y + 5]
+            for i in range(0, len(aligns)):
+                if aligns[i] == searched_pawn_type:
+                    nb += 1
+                elif aligns[i] == pawnType.EMPTY:
+                    coord = i + y
+            if nb == WIN:
+                return True, coord
+            elif nb == nb_align and coord != -1:
+                return True, coord
         return False, -1
 
     def __check_diagonals(self, nb_align, searched_pawn_type):

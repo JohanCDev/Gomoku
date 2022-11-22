@@ -131,6 +131,9 @@ class Game:
             if not check_board_input(inpt):
                 return False
         self.__brain.act()
+        if self.__brain.check_win(pawnType.BRAIN):
+            print_gomoku("Message message - I've win !!")
+            self.end_command()
         return True
 
     def info_command(self) -> bool:
