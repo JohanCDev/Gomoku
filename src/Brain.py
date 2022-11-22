@@ -45,9 +45,9 @@ class Brain:
                 if first - 1 >= 0:
                     if line_to_check[first - 1] != searched_pawn_type and line_to_check[first - 1] != pawnType.EMPTY:
                         leftFree = False
-                if rightFree:
+                if rightFree and not (y + 1 == len(line_to_check)):
                     return True, y + 1
-                elif leftFree:
+                elif leftFree and not (first - 1 < 0):
                     return True, first - 1
                 else:
                     nb = 0
@@ -117,7 +117,6 @@ class Brain:
     def __naive_thinking(self):
         aligned, x, y = self.__check_align(NAIVE, pawnType.BRAIN)
         if aligned != NONE:
-            print_gomoku(f'{x} {y}')
             return PAWN_DOWN, x, y
 
         aligned, x, y = self.__check_align(NAIVE, pawnType.MANAGER)
