@@ -1,5 +1,7 @@
 """ Enumeration of all the differents types of possible pawn on the board"""
 from enum import Enum
+from src.utils.PrintGomoku import print_gomoku
+
 
 class pawnType(Enum):
     EMPTY = 0
@@ -54,7 +56,8 @@ class GomokuBoard:
         if boardSize == -1:
             boardSize = self.__boardSize
         self.__boardSize = boardSize
-        self.boardMap = [[pawnType.EMPTY] * boardSize for i in range(boardSize)]
+        self.boardMap = [[pawnType.EMPTY] *
+                         boardSize for i in range(boardSize)]
 
     def get_pawn(self, x: int, y: int):
         """ Get the Pawn at the given coordinates """
@@ -69,13 +72,14 @@ class GomokuBoard:
     def __str__(self):
         BLUE = '\033[94m'
         RED = "\033[1;31;40m"
-        WHITE =  "\033[0;37;40m"
+        WHITE = "\033[0;37;40m"
         """ Pass the board as string to be displayed """
-        toPrint : str = f"Current board (size {self.__boardSize}):\n"
+        toPrint: str = f"Current board (size {self.__boardSize}):\n"
         toPrint += "0 is Empty / 1 is Brain / 2 is Manager\n"
         for lines in self.boardMap:
+            toPrint += 'DEBUG - '
             for cell in lines:
-                value : str = f'[{cell.value}]' + WHITE
+                value: str = f'[{cell.value}]' + WHITE
                 if cell == pawnType.BRAIN:
                     value = RED + value
                 if cell == pawnType.MANAGER:

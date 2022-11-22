@@ -184,4 +184,5 @@ class Game:
                      'country="{}"'.format(brainName, version, authors, country))
         return True
 
-### Est ce que les commandes peuvent tanker un 12, 20 ###
+    def get_board_manager(self):
+        return self.__brain.board
