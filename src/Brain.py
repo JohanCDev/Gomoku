@@ -94,7 +94,6 @@ class Brain:
         for line in self.board.boardMap:
             found, y = self.__check_lines(nb_align, line, pawn_type_to_check)
             if found:
-                print_gomoku(f'{x} {y}')
                 return LINE, x, y
             x += 1
 
@@ -130,7 +129,7 @@ class Brain:
         res, _, _ = self.__check_align(WIN, pawn_type_to_check)
         return res != NONE
 
-    def act(self, force_random : bool = True):
+    def act(self, force_random : bool = False):
         x = 0
         y = 0
         if force_random:
