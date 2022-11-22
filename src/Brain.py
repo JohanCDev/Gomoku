@@ -72,22 +72,17 @@ class Brain:
         LEFT = -1
 
         def check_one_diagonal(i, j, direct: int) -> bool:
-            aligned: bool = True
-            cell_free: bool = True
-
+            nb = 0
+            x = 0
+            y = 0
             for k in range(0, nb_align):
-                if not self.board.boardMap[i + k][j + (k * direct)] == searched_pawn_type:
-                    aligned = False
-            if aligned and nb_align != WIN:
-                cell_free = False
-                try:
-                    cell = self.board.boardMap[i +
-                                               nb_align][j + (nb_align * direct)]
-                    if cell == pawnType.EMPTY:
-                        cell_free = True
-                except IndexError:
-                    pass
-            return aligned and cell_free, i + nb_align, j + (nb_align * direct)
+                if self.board.boardMap[i + k][j + (k * direct)] == searched_pawn_type:
+                    nb += 1
+                else:
+                    if self.board.boardMap[i + k][j + (k * direct)] == pawnType.EMPTY:
+                        x = i + k
+                        y = j + (k * direct)
+            return nb + 1 == nb_align or nb == nb_align, x, y
 
         for i in range(self.boardSize):
             for j in range(len(self.board.boardMap[i])):
