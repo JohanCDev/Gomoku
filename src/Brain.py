@@ -122,7 +122,7 @@ class Brain:
         aligned, x, y = self.__check_align(NAIVE, pawnType.MANAGER)
         if aligned != NONE:
             return PAWN_DOWN, x, y
-        return PAWN_UP
+        return PAWN_UP, -1, -1
 
     def check_win(self, pawn_type_to_check : pawnType) -> bool:
         res, _, _ = self.__check_align(WIN, pawn_type_to_check)
