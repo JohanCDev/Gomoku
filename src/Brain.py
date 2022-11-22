@@ -17,6 +17,7 @@ LINE = 2
 DIAGONAL_LEFT = 3
 DIAGONAL_RIGHT = 4
 
+
 class Brain:
 
     def __init__(self, boardSize):
@@ -66,7 +67,41 @@ class Brain:
             y += 1
         return False, -1
 
-    def __check_align(self, nb_align : int, pawn_type_to_check: pawnType):
+    def __check_diagonals(self, nb_align, searched_pawn_type):
+        RIGHT = 1
+        LEFT = -1
+
+        def check_one_diagonal(i, j, direct: int) -> bool:
+            aligned: bool = True
+            cell_free: bool = True
+
+            for k in range(0, nb_align):
+                if not self.board.boardMap[i + k][j + (k * direct)] == searched_pawn_type:
+                    aligned = False
+            if aligned and nb_align != WIN:
+                cell_free = False
+                try:
+                    cell = self.board.boardMap[i +
+                                               nb_align][j + (nb_align * direct)]
+                    if cell == pawnType.EMPTY:
+                        cell_free = True
+                except IndexError:
+                    pass
+            return aligned and cell_free, i + nb_align, j + (nb_align * direct)
+
+        for i in range(self.boardSize):
+            for j in range(len(self.board.boardMap[i])):
+                if i + (nb_align - 1) < self.boardSize and j + (nb_align - 1) < len(self.board.boardMap[i]):
+                    found, x, y = check_one_diagonal(i, j, RIGHT)
+                    if found:
+                        return DIAGONAL_RIGHT, x, y
+                if i + (nb_align - 1) < self.boardSize and j - (nb_align - 1) >= 0:
+                    found, x, y = check_one_diagonal(i, j, LEFT)
+                    if found:
+                        return DIAGONAL_LEFT, x, y
+        return NONE, -1, -1
+
+    def __check_align(self, nb_align: int, pawn_type_to_check: pawnType):
 
         # def check_on_column(y: int):
         #     nb: int = 0
@@ -79,29 +114,6 @@ class Brain:
         #             return True, x
         #     return False, -1
 
-        # def check_diagonals():
-        #     RIGHT = 1
-        #     LEFT = -1
-        #     def check_one_diagonal(i, j, direct : int) -> bool:
-        #         aligned : bool = True
-
-        #         for k in range(0, nb_alignn):
-        #             if not self.__boardManager.boardMap[i + k][j + (k * direct)] == pawn_type_to_check:
-        #                 aligned = False
-        #         return aligned, i, j
-
-        #     for i in range(self.__boardSize):
-        #         for j in range(len(self.__boardManager.boardMap[i])):
-        #             if i + (nb_alignn -1) < self.__boardSize and j + (nb_alignn -1) < len(self.__boardManager.boardMap[i]):
-        #                 found, x, y = check_one_diagonal(i, j, RIGHT)
-        #                 if found:
-        #                     return DIAGONAL_RIGHT, x, y
-        #             if i + (nb_alignn -1) < self.__boardSize and j - (nb_alignn -1) >= 0:
-        #                 found, x, y = check_one_diagonal(i, j, LEFT)
-        #                 if found:
-        #                     return DIAGONAL_LEFT, x, y
-        #     return NONE, -1, -1
-
         x = 0
         for line in self.board.boardMap:
             found, y = self.__check_lines(nb_align, line, pawn_type_to_check)
@@ -113,9 +125,9 @@ class Brain:
         #     found, x = check_on_column(i)
         #     if found:
         #         return COLUMN, x, i
-        # found, x, y  = check_diagonals()
-        # if found != NONE:
-        #     return found, x, y
+        found, x, y = self.__check_diagonals(nb_align, pawn_type_to_check)
+        if found != NONE:
+            return found, x, y
         return NONE, -1, -1
 
     def __get_random_coords(self, max_value: int):
@@ -136,11 +148,11 @@ class Brain:
             return PAWN_DOWN, x, y
         return PAWN_UP, -1, -1
 
-    def check_win(self, pawn_type_to_check : pawnType) -> bool:
+    def check_win(self, pawn_type_to_check: pawnType) -> bool:
         res, _, _ = self.__check_align(WIN, pawn_type_to_check)
         return res != NONE
 
-    def act(self, force_random : bool = False):
+    def act(self, force_random: bool = False):
         x = 0
         y = 0
         if force_random:
