@@ -74,8 +74,8 @@ class GomokuBoard:
         RED = "\033[1;31;40m"
         WHITE = "\033[0;37;40m"
         """ Pass the board as string to be displayed """
-        toPrint: str = f"Current board (size {self.__boardSize}):\n"
-        toPrint += "0 is Empty / 1 is Brain / 2 is Manager\n"
+        toPrint: str = f"DEBUG - Current board (size {self.__boardSize}):\n"
+        toPrint += "DEBUG - 0 is Empty / 1 is Brain / 2 is Manager\n"
         for lines in self.boardMap:
             toPrint += 'DEBUG - '
             for cell in lines:

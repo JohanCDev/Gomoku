@@ -25,19 +25,31 @@ class Brain:
         self.boardSize = boardSize
 
     def __check_lines(self, nb_align, line_to_check, searched_pawn_type):
-        nb: int = 0
+        tmp_first: int = -1
+        first_nb: int = -1
+        second_nb: int = 0
         first: int = 0
+        empty_cell: int = -1
         y: int = 0
         for y in range(0, len(line_to_check)):
             if line_to_check[y] == searched_pawn_type:
-                if nb == 0:
+                if first_nb == 0:
                     first = y
-                nb += 1
+                if first_nb == -1:
+                    first_nb += 2
+                elif first_nb != 0:
+                    first_nb += 1
+                else:
+                    second_nb += 1
             else:
-                nb = 0
-            if nb == nb_align and nb_align == WIN:
+                tmp_first = first_nb
+                first_nb = -1
+                empty_cell = y
+            if tmp_first + second_nb + 1 == nb_align and nb_align == WIN:
+                return True, empty_cell
+            if first_nb == nb_align and nb_align == WIN:
                 return True, 0
-            elif nb == nb_align:
+            elif first_nb == nb_align:
                 rightFree = True
                 leftFree = True
                 if y + 1 < len(line_to_check):
@@ -51,7 +63,7 @@ class Brain:
                 elif leftFree and not (first - 1 < 0):
                     return True, first - 1
                 else:
-                    nb = 0
+                    first_nb = 0
             y += 1
         return False, -1
 
