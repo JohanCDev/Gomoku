@@ -116,7 +116,7 @@ class Game:
                 print_gomoku("DEBUG Message - Failure on Board Input")
                 return False
             if player == 1:
-                self.__brain.board.add_brain_pawn(x, y)
+                self.__brain.board.add_brain_pawn(x, y, False)
             else:
                 self.__brain.board.add_manager_pawn(x, y)
             print_gomoku("DEBUG Message - Succes on Board Input")
