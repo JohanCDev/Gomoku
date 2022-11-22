@@ -88,7 +88,9 @@ class Game:
         return True
 
     def begin_command(self) -> bool:
-        self.__brain.act(True)
+        self.__brain.board.add_brain_pawn(
+            int(self.__brain.boardSize / 2), int(self.__brain.boardSize / 2))
+        print_gomoku(self.__brain.board)
         print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 
