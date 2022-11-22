@@ -72,6 +72,7 @@ class GomokuBoard:
         return self.__boardSize
 
     def get_column(self, y: int) -> list:
+        """ Get the column of the given coordinates """
         if not self.__check_pos(0, y):
             return RuntimeError("The pawn can't be get with the given coordinates")
         column = []
