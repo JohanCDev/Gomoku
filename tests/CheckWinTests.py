@@ -4,10 +4,10 @@ from src.GomokuBoard import pawnType
 
 
 def run_check_win_tests():
-    # test_basic_diagonal_win()
+    test_basic_diagonal_win()
     test_basic_line_win()
     # test_basic_col_win()
-    # test_huge_diagonal_win()
+    test_huge_diagonal_win()
     test_huge_line_win()
     # test_huge_col_win()
 
