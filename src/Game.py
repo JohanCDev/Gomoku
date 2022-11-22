@@ -41,7 +41,7 @@ class Game:
             print_gomoku("ERROR message - unsupported size or other error")
             return False
         self.__brain.boardSize = board_size
-        print_gomoku("OK - everything is good")
+        print_gomoku("OK")
         self.__brain.board.reset_board(self.__brain.boardSize)
         print_gomoku(self.__brain.board)
         return True
@@ -116,7 +116,7 @@ class Game:
                 print_gomoku("DEBUG Message - Failure on Board Input")
                 return False
             if player == 1:
-                self.__brain.board.add_brain_pawn(x, y)
+                self.__brain.board.add_brain_pawn(x, y, False)
             else:
                 self.__brain.board.add_manager_pawn(x, y)
             print_gomoku("DEBUG Message - Succes on Board Input")
@@ -131,6 +131,9 @@ class Game:
             if not check_board_input(inpt):
                 return False
         self.__brain.act()
+        if self.__brain.check_win(pawnType.BRAIN):
+            print_gomoku("Message message - I've win !!")
+            self.end_command()
         return True
 
     def info_command(self) -> bool:
