@@ -69,6 +69,12 @@ class GomokuBoard:
         """ Get the Board Size """
         return self.__boardSize
 
+    def get_column(self, x: int) -> list:
+        column = []
+        for y in range(0, self.__boardSize):
+            column.append(self.boardMap[x][y])
+        return column
+
     def __str__(self):
         BLUE = '\033[94m'
         RED = "\033[1;31;40m"

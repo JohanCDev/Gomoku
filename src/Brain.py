@@ -54,6 +54,37 @@ class Brain:
             y += 1
         return False, -1
 
+    def __check_columns(self, nb_align, colums_to_check, searched_pawn_type):
+        nb: int = 0
+        first : int = 0
+        x : int = 0
+        for x in range(0, len(colums_to_check)):
+            if colums_to_check[x] == searched_pawn_type:
+                if nb == 0:
+                    first = x
+                nb += 1
+            else:
+                nb = 0
+            if nb == nb_align and nb_align == WIN:
+                return True, 0
+            elif nb == nb_align:
+                rightFree = True
+                leftFree = True
+                if x + 1 < len(colums_to_check):
+                    if colums_to_check[x + 1] != searched_pawn_type and colums_to_check[x + 1] != pawnType.EMPTY:
+                        rightFree = False
+                if first - 1 >= 0:
+                    if colums_to_check[first - 1] != searched_pawn_type and colums_to_check[first - 1] != pawnType.EMPTY:
+                        leftFree = False
+                if rightFree and not (x + 1 == len(colums_to_check)):
+                    return True, x + 1
+                elif leftFree and not (first - 1 < 0):
+                    return True, first - 1
+                else:
+                    nb = 0
+            x += 1
+        return False, -1
+
     def __check_align(self, nb_align : int, pawn_type_to_check: pawnType):
 
         # def check_on_column(y: int):
@@ -96,15 +127,16 @@ class Brain:
             if found:
                 return LINE, x, y
             x += 1
-
-        # for i in range(0, self.__boardSize - 1):
-        #     found, x = check_on_column(i)
-        #     if found:
-        #         return COLUMN, x, i
+        for i in range(0, self.boardSize - 1):
+            column = self.board.get_column(i)
+            found, x = self.__check_columns(nb_align, column, pawn_type_to_check)
+            if found:
+                return COLUMN, x, y
         # found, x, y  = check_diagonals()
         # if found != NONE:
         #     return found, x, y
         return NONE, -1, -1
+
 
     def __get_random_coords(self, max_value: int):
         rand_x = random.randrange(max_value)
