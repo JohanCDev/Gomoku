@@ -25,47 +25,60 @@ class Brain:
         self.boardSize = boardSize
 
     def __check_lines(self, nb_align, line_to_check, searched_pawn_type):
-        tmp_first: int = -1
-        first_nb: int = -1
-        second_nb: int = 0
-        first: int = 0
-        empty_cell: int = -1
-        y: int = 0
-        for y in range(0, len(line_to_check)):
-            if line_to_check[y] == searched_pawn_type:
-                if first_nb == 0:
-                    first = y
-                if first_nb == -1:
-                    first_nb += 2
-                elif first_nb != 0:
-                    first_nb += 1
-                else:
-                    second_nb += 1
-            else:
-                tmp_first = first_nb
-                first_nb = -1
-                empty_cell = y
-            if tmp_first + second_nb + 1 == nb_align:
-                return True, empty_cell
-            if first_nb == nb_align and nb_align == WIN:
-                return True, 0
-            elif first_nb == nb_align:
-                rightFree = True
-                leftFree = True
-                if y + 1 < len(line_to_check):
-                    if line_to_check[y + 1] != searched_pawn_type and line_to_check[y + 1] != pawnType.EMPTY:
-                        rightFree = False
-                if first - 1 >= 0:
-                    if line_to_check[first - 1] != searched_pawn_type and line_to_check[first - 1] != pawnType.EMPTY:
-                        leftFree = False
-                if rightFree and not (y + 1 == len(line_to_check)):
-                    return True, y + 1
-                elif leftFree and not (first - 1 < 0):
-                    return True, first - 1
-                else:
-                    first_nb = 0
-            y += 1
-        return False, -1
+        # tmp_first: int = -1
+        # first_nb: int = -1
+        # second_nb: int = 0
+        # first: int = 0
+        # empty_cell: int = -1
+        # y: int = 0
+
+        y = 0
+        for a in range(0, len(line_to_check) - 4):
+            nb = 0
+            for b in range(0, 5):
+                if line_to_check[a + b] == searched_pawn_type:
+                    nb += 1
+                elif line_to_check[a + b] == pawnType.EMPTY:
+                    y = a + b
+            if nb + 1 == nb_align or nb == nb_align:
+                return True, y
+        
+
+        # for y in range(0, len(line_to_check)):
+        #     if line_to_check[y] == searched_pawn_type:
+        #         if first_nb == 0:
+        #             first = y
+        #         if first_nb == -1:
+        #             first_nb += 2
+        #         elif first_nb != 0:
+        #             first_nb += 1
+        #         else:
+        #             second_nb += 1
+        #     else:
+        #         tmp_first = first_nb
+        #         first_nb = -1
+        #         empty_cell = y
+        #     if tmp_first + second_nb + 1 == nb_align:
+        #         return True, empty_cell
+        #     if first_nb == nb_align and nb_align == WIN:
+        #         return True, 0
+        #     elif first_nb == nb_align:
+        #         rightFree = True
+        #         leftFree = True
+        #         if y + 1 < len(line_to_check):
+        #             if line_to_check[y + 1] != searched_pawn_type and line_to_check[y + 1] != pawnType.EMPTY:
+        #                 rightFree = False
+        #         if first - 1 >= 0:
+        #             if line_to_check[first - 1] != searched_pawn_type and line_to_check[first - 1] != pawnType.EMPTY:
+        #                 leftFree = False
+        #         if rightFree and not (y + 1 == len(line_to_check)):
+        #             return True, y + 1
+        #         elif leftFree and not (first - 1 < 0):
+        #             return True, first - 1
+        #         else:
+        #             first_nb = 0
+        #     y += 1
+        return False, y
 
     def __check_diagonals(self, nb_align, searched_pawn_type):
         RIGHT = 1
@@ -113,6 +126,7 @@ class Brain:
         for line in self.board.boardMap:
             found, y = self.__check_lines(nb_align, line, pawn_type_to_check)
             if found:
+                print(f'{x}, {y}')
                 return LINE, x, y
             x += 1
 
@@ -162,4 +176,5 @@ class Brain:
                 self.act(True)
             else:
                 self.board.add_brain_pawn(x, y)
+
                 return x, y
