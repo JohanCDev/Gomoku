@@ -46,6 +46,7 @@ class GomokuBoard:
     def add_brain_pawn(self, x: int, y: int):
         """ Add a Brain Pawn at the given coordinates """
         self.__add_pawn(x, y, pawnType.BRAIN)
+        print_gomoku(f"{x},{y}")
 
     def add_manager_pawn(self, x: int, y: int):
         """ Add a Manager Pawn at the given coordinates"""
