@@ -41,7 +41,7 @@ class Game:
             print_gomoku("ERROR message - unsupported size or other error")
             return False
         self.__brain.boardSize = board_size
-        print_gomoku("OK - everything is good")
+        print_gomoku("OK")
         self.__brain.board.reset_board(self.__brain.boardSize)
         print_gomoku(self.__brain.board)
         return True
