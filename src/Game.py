@@ -12,7 +12,6 @@ EXPLORE = 3
 
 class Game:
     def __init__(self):
-        self.__started = True
         self.parser = ParseInput()
         self.__boardManager = GomokuBoard(20)
         self.command_map = {
@@ -99,6 +98,20 @@ class Game:
                 print_gomoku("UNKNOWN message - command ",
                              self.parser.get_parsed_input()[0], "not existing.")
 
+    def brain_thinking(self, force_random : bool = False):
+        x, y = 0
+        if force_random:
+            x, y = self.__get_random_coords(self.__boardSize - 1)
+        else:
+            ##Naive thinking
+            ##Explore
+            ##Advanced
+            pass
+        self.__boardManager.add_brain_pawn(x, y)
+        if self.__check_align(WIN, pawnType.BRAIN) == True:
+            print_gomoku("Message message - I've win !")
+            self.end_command()
+
     def start_command(self) -> bool:
         board_size: int = -1
         try:
@@ -117,6 +130,7 @@ class Game:
 
     def turn_command(self) -> bool:
         try:
+            """ Error Handling of Turn Command """
             parsed_args = self.parser.get_parsed_input()[1].split(",")
             if len(parsed_args) != 2:
                 print_gomoku("ERROR message - Unauthorized move")
@@ -133,15 +147,13 @@ class Game:
             else:
                 self.__boardManager.add_manager_pawn(
                     int(parsed_args[0]), int(parsed_args[1]))
+
             if self.__check_align(WIN, pawnType.MANAGER) == True:
                 print_gomoku("Message message - You've win...")
                 self.end_command()
-            rand_x, rand_y = self.__get_random_coords(self.__boardSize - 1)
-            print_gomoku(f'{rand_x},{rand_y}')
-            self.__boardManager.add_brain_pawn(rand_x, rand_y)
-            if self.__check_align(WIN, pawnType.BRAIN) == True:
-                print_gomoku("Message message - I've win !")
-                self.end_command()
+
+            self.brain_thinking()
+
         except IndexError:
             print_gomoku("ERROR message - No movement was given")
             return False
@@ -154,9 +166,7 @@ class Game:
         return True
 
     def begin_command(self) -> bool:
-        rand_x, rand_y = self.__get_random_coords(self.__boardSize - 1)
-        print_gomoku(f'{rand_x},{rand_y}')
-        self.__boardManager.add_brain_pawn(rand_x, rand_y)
+        self.brain_thinking(True)
         print_gomoku("DEBUG message - Valid BEGIN command")
         return True
 
