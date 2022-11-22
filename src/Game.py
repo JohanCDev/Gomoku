@@ -119,12 +119,15 @@ class Game:
         placed : bool = False
         """ FAIRE DE L'AUTRE Côté aussi !!!!!"""
         if alignment == LINE:
-            if y + 4 < self.__boardSize:
-                self.__boardManager.add_brain_pawn(x, y + 4)
+            if y + 1 < self.__boardSize:
+                self.__boardManager.add_brain_pawn(x, y + 1)
+                placed = True
+            if not placed and y - 4 > -1:
+                self.__boardManager.add_brain_pawn(x, y - 4)
                 placed = True
         if alignment == COLUMN:
-            if x + 4 < self.__boardSize:
-                self.__boardManager.add_brain_pawn(x + 4, y)
+            if x + 1 < self.__boardSize:
+                self.__boardManager.add_brain_pawn(x + 1, y)
                 placed = True
         if alignment == DIAGONAL_RIGHT:
             if y + 4 < self.__boardSize and x + 4 < self.__boardSize:
@@ -148,7 +151,6 @@ class Game:
         if aligned != NONE:
             if self.__naive_place_pawn(aligned, x, y):
                 return PLACED
-
         return NOT_PLACED
 
 
@@ -206,7 +208,8 @@ class Game:
                 self.__boardManager.add_manager_pawn(
                     int(parsed_args[0]), int(parsed_args[1]))
 
-            if self.__check_align(WIN, pawnType.MANAGER) == True:
+            win, _, _ = self.__check_align(WIN, pawnType.MANAGER)
+            if win != NONE:
                 print_gomoku("Message message - You've win...")
                 self.end_command()
 
@@ -221,6 +224,7 @@ class Game:
         except RuntimeError:
             print_gomoku("ERROR message - Runtime error of getPawn")
             return False
+        print_gomoku(self.__boardManager)
         return True
 
     def begin_command(self) -> bool:
