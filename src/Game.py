@@ -10,6 +10,15 @@ WIN = 5
 NAIVE = 4
 EXPLORE = 3
 
+NONE = -1
+COLUMN = 1
+LINE = 2
+DIAGONAL_LEFT = 3
+DIAGONAL_RIGHT = 4
+
+PLACED = True
+NOT_PLACED = False
+
 class Game:
     def __init__(self):
         self.parser = ParseInput()
@@ -33,19 +42,21 @@ class Game:
             rand_y = random.randrange(max_value)
         return rand_x, rand_y
 
-    def __check_align(self, nb_alignn : int, pawn_type_to_check: pawnType) -> bool:
+    def __check_align(self, nb_alignn : int, pawn_type_to_check: pawnType):
         def check_on_line(line_to_check: list[pawnType]) -> bool:
             nb: int = 0
+            currY : int = 0
             for char in line_to_check:
                 if char == pawn_type_to_check:
                     nb += 1
                 else:
                     nb = 0
                 if nb == nb_alignn:
-                    return True
-            return False
+                    return True, currY
+                currY += 1
+            return False, -1
 
-        def check_on_column(y: int) -> bool:
+        def check_on_column(y: int):
             nb: int = 0
             for x in range(0, self.__boardSize - 1):
                 if self.__boardManager.get_pawn(x, y) == pawn_type_to_check:
@@ -53,44 +64,50 @@ class Game:
                 else:
                     nb = 0
                 if nb == nb_alignn:
-                    return True
-            return False
+                    return True, x
+            return False, -1
 
-        def check_diagonals() -> bool:
+        def check_diagonals():
             RIGHT = 1
             LEFT = -1
-            def check_one_diagonal(direct : int) -> bool:
+            def check_one_diagonal(i, j, direct : int) -> bool:
                 aligned : bool = True
 
                 for k in range(0, nb_alignn):
                     if not self.__boardManager.boardMap[i + k][j + (k * direct)] == pawn_type_to_check:
                         aligned = False
-                if aligned:
-                    return True
+                return aligned, i, j
 
             for i in range(self.__boardSize):
                 for j in range(len(self.__boardManager.boardMap[i])):
                     if i + (nb_alignn -1) < self.__boardSize and j + (nb_alignn -1) < len(self.__boardManager.boardMap[i]):
-                        if check_one_diagonal(RIGHT):
-                            return True
+                        found, x, y = check_one_diagonal(i, j, RIGHT)
+                        if found:
+                            return DIAGONAL_RIGHT, x, y
                     if i + (nb_alignn -1) < self.__boardSize and j - (nb_alignn -1) >= 0:
-                        if check_one_diagonal(LEFT):
-                            return True
-            return False
+                        found, x, y = check_one_diagonal(i, j, LEFT)
+                        if found:
+                            return DIAGONAL_LEFT, x, y
+            return NONE, -1, -1
 
+        x = 0
         for line in self.__boardManager.boardMap:
-            if check_on_line(line):
-                return True
+            found, y = check_on_line(line)
+            if found:
+                return LINE, x, y
+            x += 1
+
         for i in range(0, self.__boardSize - 1):
-            if check_on_column(i):
-                return True
-        if check_diagonals():
-            return True
-        return False
+            found, x = check_on_column(i)
+            if found:
+                return COLUMN, x, i
+        found, x, y  = check_diagonals()
+        if found != NONE:
+            return found, x, y
+        return NONE, -1, -1
 
     def run(self) -> int:
         while True:
-            print_gomoku(self.__boardManager)
             self.parser.ask_input()
             try:
                 self.command_map[self.parser.get_parsed_input()[0]]()
@@ -98,17 +115,57 @@ class Game:
                 print_gomoku("UNKNOWN message - command ",
                              self.parser.get_parsed_input()[0], "not existing.")
 
+    def __naive_place_pawn(self, alignment, x, y : int) -> bool:
+        placed : bool = False
+        """ FAIRE DE L'AUTRE Côté aussi !!!!!"""
+        if alignment == LINE:
+            if y + 4 < self.__boardSize:
+                self.__boardManager.add_brain_pawn(x, y + 4)
+                placed = True
+        if alignment == COLUMN:
+            if x + 4 < self.__boardSize:
+                self.__boardManager.add_brain_pawn(x + 4, y)
+                placed = True
+        if alignment == DIAGONAL_RIGHT:
+            if y + 4 < self.__boardSize and x + 4 < self.__boardSize:
+                self.__boardManager.add_brain_pawn(x + 4, y + 4)
+                placed = True
+        if alignment == DIAGONAL_LEFT:
+            if y + 4 < self.__boardSize and x - 4 > -1:
+                self.__boardManager.add_brain_pawn(x + 4, y - 4)
+                placed = True
+
+        return placed
+
+    def naive_thinking(self):
+        """ BEGIN """
+        aligned, x, y = self.__check_align(NAIVE, pawnType.MANAGER)
+        if aligned != NONE:
+            if self.__naive_place_pawn(aligned, x, y):
+                return PLACED
+
+        aligned, x, y = self.__check_align(NAIVE, pawnType.BRAIN)
+        if aligned != NONE:
+            if self.__naive_place_pawn(aligned, x, y):
+                return PLACED
+
+        return NOT_PLACED
+
+
     def brain_thinking(self, force_random : bool = False):
-        x, y = 0
+        x = 0
+        y = 0
         if force_random:
             x, y = self.__get_random_coords(self.__boardSize - 1)
+            while self.__boardManager.get_pawn(x, y) != pawnType.EMPTY:
+                x, y = self.__get_random_coords(self.__boardSize - 1)
+            self.__boardManager.add_brain_pawn(x, y)
         else:
-            ##Naive thinking
-            ##Explore
-            ##Advanced
-            pass
-        self.__boardManager.add_brain_pawn(x, y)
-        if self.__check_align(WIN, pawnType.BRAIN) == True:
+            if self.naive_thinking() == NOT_PLACED:
+                self.brain_thinking(True)
+
+        win, _, _ = self.__check_align(WIN, pawnType.BRAIN)
+        if win != NONE:
             print_gomoku("Message message - I've win !")
             self.end_command()
 
@@ -126,6 +183,7 @@ class Game:
         self.__boardSize = board_size
         print_gomoku("OK - everything is good")
         self.__boardManager.reset_board(self.__boardSize)
+        print_gomoku(self.__boardManager)
         return True
 
     def turn_command(self) -> bool:
@@ -254,9 +312,12 @@ class Game:
         return True
 
     def end_command(self) -> bool:
+        print_gomoku(self.__boardManager)
         exit(0)
 
     def about_command(self) -> bool:
         print_gomoku('name="{}", version="{}", author="{}", '
                      'country="{}"'.format(brainName, version, authors, country))
         return True
+
+### Est ce que les commandes peuvent tanker un 12, 20 ###
