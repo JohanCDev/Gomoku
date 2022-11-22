@@ -72,10 +72,30 @@ class GomokuBoard:
         return self.__boardSize
 
     def get_column(self, y: int) -> list:
+        if not self.__check_pos(0, y):
+            return RuntimeError("The pawn can't be get with the given coordinates")
         column = []
         for x in range(0, self.__boardSize):
             column.append(self.boardMap[x][y])
         return column
+
+    def get_diagonal(self, x: int, y: int) -> list:
+        """ Get the diagonal of the given coordinates """
+        if not self.__check_pos(x, y):
+            return RuntimeError("The pawn can't be get with the given coordinates")
+        diagonal = []
+        for i in range(0, self.__boardSize):
+            diagonal.append(self.boardMap[i][i])
+        return diagonal
+
+    def get_reverse_diagonal(self, x: int, y: int) -> list:
+        """ Get the reverse diagonal of the given coordinates """
+        if not self.__check_pos(x, y):
+            return RuntimeError("The pawn can't be get with the given coordinates")
+        diagonal = []
+        for i in range(0, self.__boardSize):
+            diagonal.append(self.boardMap[i][self.__boardSize - i - 1])
+        return diagonal
 
     def __str__(self):
         BLUE = '\033[94m'
