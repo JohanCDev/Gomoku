@@ -40,79 +40,7 @@ class Brain:
                 return True, coord
         return False, -1
 
-    def __check_columns(self, nb_align, colums_to_check, searched_pawn_type):
-        nb: int = 0
-        first : int = 0
-        x : int = 0
-        for x in range(0, len(colums_to_check)):
-            if colums_to_check[x] == searched_pawn_type:
-                if nb == 0:
-                    first = x
-                nb += 1
-            else:
-                nb = 0
-            if nb == nb_align and nb_align == WIN:
-                return True, 0
-            elif nb == nb_align:
-                rightFree = True
-                leftFree = True
-                if x + 1 < len(colums_to_check):
-                    if colums_to_check[x + 1] != searched_pawn_type and colums_to_check[x + 1] != pawnType.EMPTY:
-                        rightFree = False
-                if first - 1 >= 0:
-                    if colums_to_check[first - 1] != searched_pawn_type and colums_to_check[first - 1] != pawnType.EMPTY:
-                        leftFree = False
-                if rightFree and not (x + 1 == len(colums_to_check)):
-                    return True, x + 1
-                elif leftFree and not (first - 1 < 0):
-                    return True, first - 1
-                else:
-                    nb = 0
-            x += 1
-        return False, -1
-
-    def __check_diagonals(self, nb_align, searched_pawn_type):
-        RIGHT = 1
-        LEFT = -1
-
-        def check_one_diagonal(i, j, direct: int) -> bool:
-            nb = 0
-            x = 0
-            y = 0
-            for k in range(0, nb_align):
-                if self.board.boardMap[i + k][j + (k * direct)] == searched_pawn_type:
-                    nb += 1
-                else:
-                    if self.board.boardMap[i + k][j + (k * direct)] == pawnType.EMPTY:
-                        x = i + k
-                        y = j + (k * direct)
-            return nb + 1 == nb_align or nb == nb_align, x, y
-
-        for i in range(self.boardSize):
-            for j in range(len(self.board.boardMap[i])):
-                if i + (nb_align - 1) < self.boardSize and j + (nb_align - 1) < len(self.board.boardMap[i]):
-                    found, x, y = check_one_diagonal(i, j, RIGHT)
-                    if found:
-                        return DIAGONAL_RIGHT, x, y
-                if i + (nb_align - 1) < self.boardSize and j - (nb_align - 1) >= 0:
-                    found, x, y = check_one_diagonal(i, j, LEFT)
-                    if found:
-                        return DIAGONAL_LEFT, x, y
-        return NONE, -1, -1
-
     def __check_align(self, nb_align: int, pawn_type_to_check: pawnType):
-
-        # def check_on_column(y: int):
-        #     nb: int = 0
-        #     for x in range(0, self.__boardSize - 1):
-        #         if self.__boardManager.get_pawn(x, y) == pawn_type_to_check:
-        #             nb += 1
-        #         else:
-        #             nb = 0
-        #         if nb == nb_alignn:
-        #             return True, x
-        #     return False, -1
-
         x = 0
         for line in self.board.boardMap:
             found, y = self.__check_lines(nb_align, line, pawn_type_to_check)
@@ -123,9 +51,20 @@ class Brain:
             if found:
                 return COLUMN, y, x
             x += 1
-        found, x, y = self.__check_diagonals(nb_align, pawn_type_to_check)
-        if found != NONE:
-            return found, x, y
+        diago_len = len(self.board.boardMap)
+        for i in range(0, diago_len):
+            for j in range(0, diago_len):
+                if j >= 4:
+                    left_diago = self.board.get_reverse_diagonal(i, j)
+                    found, coef = self.__check_lines(nb_align, left_diago, pawn_type_to_check)
+                    if found:
+                        return DIAGONAL_LEFT, i + coef, j - coef
+                if diago_len - j >= 4:
+                    right_diago = self.board.get_diagonal(i, j)
+                    found, coef = self.__check_lines(nb_align, right_diago, pawn_type_to_check)
+                    if found:
+                        return DIAGONAL_RIGHT, i + coef, j + coef
+
         return NONE, -1, -1
 
 
