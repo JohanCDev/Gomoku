@@ -57,16 +57,14 @@ class Game:
                     return True
             return False
 
-        def check_diagonal() -> bool:
-            
-            def check_one_diagonal(right : bool) -> bool:
+        def check_diagonals() -> bool:
+            RIGHT = 1
+            LEFT = -1
+            def check_one_diagonal(direct : int) -> bool:
                 aligned : bool = True
-                neg : int = 1
-                if not right:
-                    neg = -1
 
                 for k in range(0, nb_alignn):
-                    if not self.__boardManager.boardMap[i + k][j + (k * neg)] == pawn_type_to_check:
+                    if not self.__boardManager.boardMap[i + k][j + (k * direct)] == pawn_type_to_check:
                         aligned = False
                 if aligned:
                     return True
@@ -74,10 +72,10 @@ class Game:
             for i in range(self.__boardSize):
                 for j in range(len(self.__boardManager.boardMap[i])):
                     if i + (nb_alignn -1) < self.__boardSize and j + (nb_alignn -1) < len(self.__boardManager.boardMap[i]):
-                        if check_one_diagonal(True):
+                        if check_one_diagonal(RIGHT):
                             return True
                     if i + (nb_alignn -1) < self.__boardSize and j - (nb_alignn -1) >= 0:
-                        if check_one_diagonal(False):
+                        if check_one_diagonal(LEFT):
                             return True
             return False
 
@@ -87,7 +85,7 @@ class Game:
         for i in range(0, self.__boardSize - 1):
             if check_on_column(i):
                 return True
-        if check_diagonal():
+        if check_diagonals():
             return True
         return False
 
