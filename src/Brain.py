@@ -32,8 +32,11 @@ class Brain:
             for i in range(0, len(aligns)):
                 if aligns[i] == searched_pawn_type:
                     nb += 1
-                elif aligns[i] == pawnType.EMPTY:
-                    coord = i + y
+                else:
+                    if aligns[i] == pawnType.EMPTY:
+                        coord = i + y
+                    else:
+                        nb = 0
             if nb == WIN:
                 return True, coord
             elif nb == nb_align and coord != -1:
@@ -45,10 +48,12 @@ class Brain:
         for line in self.board.boardMap:
             found, y = self.__check_lines(nb_align, line, pawn_type_to_check)
             if found:
+                print_gomoku("DEBUG LINE")
                 return LINE, x, y
             column = self.board.get_column(x)
             found, y = self.__check_lines(nb_align, column, pawn_type_to_check)
             if found:
+                print_gomoku("DEBUG COLUMN")
                 return COLUMN, y, x
             x += 1
         diago_len = len(self.board.boardMap)
@@ -58,11 +63,13 @@ class Brain:
                     left_diago = self.board.get_reverse_diagonal(i, j)
                     found, coef = self.__check_lines(nb_align, left_diago, pawn_type_to_check)
                     if found:
+                        print_gomoku("DEBUG LEFT")
                         return DIAGONAL_LEFT, i + coef, j - coef
                 if diago_len - j >= 4:
                     right_diago = self.board.get_diagonal(i, j)
                     found, coef = self.__check_lines(nb_align, right_diago, pawn_type_to_check)
                     if found:
+                        print_gomoku("DEBUG RIGHT")
                         return DIAGONAL_RIGHT, i + coef, j + coef
 
         return NONE, -1, -1
