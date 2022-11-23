@@ -106,3 +106,7 @@ class Brain:
             else:
                 self.board.add_brain_pawn(x, y)
                 return x, y
+
+    def call_naive(self):
+        """ Only for tests """
+        return self.__naive_thinking()
