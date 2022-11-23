@@ -62,7 +62,7 @@ jobs:
       - name: Check Gomoku build
         uses: andstor/file-existence-action@v1
         with:
-          files: "pbrain-gomoku-ai.exe.notanexecutable"
+          files: "./dist/pbrain-gomoku-ai.exe.notanexecutable"
 
   mirror:
     needs: [build-on-ubuntu, build-on-windows]
