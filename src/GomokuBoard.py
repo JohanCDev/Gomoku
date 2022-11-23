@@ -31,7 +31,7 @@ class GomokuBoard:
         """ Private Method, check if the pawn on the given coordinates is empty """
         if not self.__check_pos(x, y):
             return False
-        if self.boardMap[x][y] != pawnType.EMPTY:
+        if self.boardMap[y][x] != pawnType.EMPTY:
             return False
         return True
 
@@ -41,7 +41,7 @@ class GomokuBoard:
             raise RuntimeError('Invalid Coordinate')
         if not self.__is_empty(x, y):
             raise RuntimeError('Cell is not empty')
-        self.boardMap[x][y] = type
+        self.boardMap[y][x] = type
 
     def add_brain_pawn(self, x: int, y: int, display=True):
         """ Add a Brain Pawn at the given coordinates """
@@ -65,19 +65,19 @@ class GomokuBoard:
         """ Get the Pawn at the given coordinates """
         if not self.__check_pos(x, y):
             return RuntimeError("The pawn can't be get with the given coordinates")
-        return self.boardMap[x][y]
+        return self.boardMap[y][x]
 
     def get_board_size(self) -> int:
         """ Get the Board Size """
         return self.__boardSize
 
-    def get_column(self, y: int) -> list:
+    def get_column(self, x: int) -> list | RuntimeError:
         """ Get the column of the given coordinates """
-        if not self.__check_pos(0, y):
+        if not self.__check_pos(0, x):
             return RuntimeError("The pawn can't be get with the given coordinates")
         column = []
-        for x in range(0, self.__boardSize):
-            column.append(self.boardMap[x][y])
+        for y in range(0, self.__boardSize):
+            column.append(self.boardMap[y][x])
         return column
 
     def get_diagonal(self, x: int, y: int) -> list:

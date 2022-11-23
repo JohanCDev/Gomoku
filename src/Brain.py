@@ -27,35 +27,34 @@ class Brain:
     def __check_lines(self, nb_align, line_to_check, searched_pawn_type):
         nb: int = 0
         coord: int = -1
-        for y in range(0, len(line_to_check) - 4):
-            aligns = line_to_check[y:y + 5]
+        for x in range(0, len(line_to_check) - 4):
+            aligns = line_to_check[x:x + 5]
             for i in range(0, len(aligns)):
                 if aligns[i] == searched_pawn_type:
                     nb += 1
                 else:
                     if aligns[i] == pawnType.EMPTY:
-                        coord = i + y
-                    else:
-                        nb = 0
+                        coord = i + x
             if nb == WIN:
                 return True, coord
             elif nb == nb_align and coord != -1:
                 return True, coord
+            nb = 0
         return False, -1
 
     def __check_align(self, nb_align: int, pawn_type_to_check: pawnType):
-        x = 0
+        y = 0
         for line in self.board.boardMap:
-            found, y = self.__check_lines(nb_align, line, pawn_type_to_check)
+            found, x = self.__check_lines(nb_align, line, pawn_type_to_check)
             if found:
                 print_gomoku("DEBUG LINE")
                 return LINE, x, y
-            column = self.board.get_column(x)
-            found, y = self.__check_lines(nb_align, column, pawn_type_to_check)
+            column = self.board.get_column(y)
+            found, x = self.__check_lines(nb_align, column, pawn_type_to_check)
             if found:
                 print_gomoku("DEBUG COLUMN")
-                return COLUMN, y, x
-            x += 1
+                return COLUMN, x, y
+            y += 1
         diago_len = len(self.board.boardMap)
         for i in range(0, diago_len):
             for j in range(0, diago_len):
@@ -64,16 +63,15 @@ class Brain:
                     found, coef = self.__check_lines(nb_align, left_diago, pawn_type_to_check)
                     if found:
                         print_gomoku("DEBUG LEFT")
-                        return DIAGONAL_LEFT, i + coef, j - coef
+                        return DIAGONAL_LEFT, j - coef, i + coef
                 if diago_len - j >= 4:
                     right_diago = self.board.get_diagonal(i, j)
                     found, coef = self.__check_lines(nb_align, right_diago, pawn_type_to_check)
                     if found:
                         print_gomoku("DEBUG RIGHT")
-                        return DIAGONAL_RIGHT, i + coef, j + coef
+                        return DIAGONAL_RIGHT, j + coef, i + coef
 
         return NONE, -1, -1
-
 
     def __get_random_coords(self, max_value: int):
         rand_x = random.randrange(max_value)
