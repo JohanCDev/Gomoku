@@ -43,18 +43,18 @@ class Brain:
         return False, -1
 
     def __check_align(self, nb_align: int, pawn_type_to_check: pawnType):
-        y = 0
+        x = 0
         for line in self.board.boardMap:
-            found, x = self.__check_lines(nb_align, line, pawn_type_to_check)
+            found, y = self.__check_lines(nb_align, line, pawn_type_to_check)
             if found:
                 print_gomoku("DEBUG LINE")
                 return LINE, x, y
-            column = self.board.get_column(y)
-            found, x = self.__check_lines(nb_align, column, pawn_type_to_check)
+            column = self.board.get_column(x)
+            found, y = self.__check_lines(nb_align, column, pawn_type_to_check)
             if found:
                 print_gomoku("DEBUG COLUMN")
                 return COLUMN, x, y
-            y += 1
+            x += 1
         diago_len = len(self.board.boardMap)
         for i in range(0, diago_len):
             for j in range(0, diago_len):

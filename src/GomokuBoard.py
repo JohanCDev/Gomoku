@@ -73,7 +73,7 @@ class GomokuBoard:
 
     def get_column(self, x: int) -> list | RuntimeError:
         """ Get the column of the given coordinates """
-        if not self.__check_pos(0, x):
+        if not self.__check_pos(x, 0):
             return RuntimeError("The pawn can't be get with the given coordinates")
         column = []
         for y in range(0, self.__boardSize):
@@ -102,7 +102,7 @@ class GomokuBoard:
         BLUE = ''
         RED = ''
         WHITE = ''
-        if platform == "linux" or platform == "linux2":
+        if platform == "linux" or platform == "linux2" or platform == "darwin":
             BLUE = '\033[94m'
             RED = "\033[1;31;40m"
             WHITE = "\033[0;37;40m"
