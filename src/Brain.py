@@ -27,24 +27,27 @@ class Brain:
     def __check_lines(self, nb_align, line_to_check, searched_pawn_type):
         nb: int = 0
         coord: int = -1
-        for y in range(0, len(line_to_check) - 4):
-            aligns = line_to_check[y:y + 5]
+        for x in range(0, len(line_to_check) - 4):
+            aligns = line_to_check[x:x + 5]
+            coord = -1
             for i in range(0, len(aligns)):
                 if aligns[i] == searched_pawn_type:
                     nb += 1
+                elif aligns[i] == pawnType.EMPTY:
+                    coord = i + x
                 else:
-                    if aligns[i] == pawnType.EMPTY:
-                        coord = i + y
+                    nb = 0
             if nb == WIN:
                 return True, coord
             elif nb == nb_align and coord != -1:
+                print_gomoku("DEBUG Toto")
                 return True, coord
             nb = 0
         return False, -1
 
     def __check_align(self, nb_align: int, pawn_type_to_check: pawnType):
         x = 0
-        cols, rows, fdiag, bdiag = self.board.get_diagonals()
+        cols, rows, fdiag, bdiag = self.board.get_cols_rows_diags()
         for col in cols:
             found, y = self.__check_lines(nb_align, col, pawn_type_to_check)
             if found:
@@ -75,7 +78,6 @@ class Brain:
                     return DIAGONAL_RIGHT, y, x - 20 + y + 1
             x += 1
         return NONE, -1, -1
-
 
     def __get_random_coords(self, max_value: int):
         rand_x = random.randrange(max_value)
