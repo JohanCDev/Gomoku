@@ -13,7 +13,7 @@ def test_board_init():
         secondBoard = GomokuBoard(4)
     except RuntimeError:
         pass
-    assert firstBoard.get_board_size() is 10
+    assert firstBoard.get_board_size() == 10
 
 
 def test_add_pawn():
@@ -23,7 +23,7 @@ def test_add_pawn():
         board.add_manager_pawn(5, 5)
     except RuntimeError:
         pass
-    assert board.get_pawn(1, 1) == pawnType.BRAIN
+    assert board.get_pawn(1, 1) is pawnType.BRAIN
 
 def test_reset_board():
     board = GomokuBoard(5)
