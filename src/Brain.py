@@ -29,15 +29,18 @@ class Brain:
         coord: int = -1
         for x in range(0, len(line_to_check) - 4):
             aligns = line_to_check[x:x + 5]
+            coord = -1
             for i in range(0, len(aligns)):
                 if aligns[i] == searched_pawn_type:
                     nb += 1
+                elif aligns[i] == pawnType.EMPTY:
+                    coord = i + x
                 else:
-                    if aligns[i] == pawnType.EMPTY:
-                        coord = i + x
+                    nb = 0
             if nb == WIN:
                 return True, coord
             elif nb == nb_align and coord != -1:
+                print_gomoku("DEBUG Toto")
                 return True, coord
             nb = 0
         return False, -1
@@ -48,7 +51,7 @@ class Brain:
             found, y = self.__check_lines(nb_align, line, pawn_type_to_check)
             if found:
                 print_gomoku("DEBUG LINE")
-                return LINE, x, y
+                return LINE, y, x
             column = self.board.get_column(x)
             found, y = self.__check_lines(nb_align, column, pawn_type_to_check)
             if found:
