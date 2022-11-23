@@ -1,1 +1,1 @@
-pyinstaller --onefile -n pbrain-gomoku-ai.exe src/pbrain-gomoku-ai.py
+pyinstaller --onefile -n pbrain-gomoku-ai.exe pbrain-gomoku-ai.py

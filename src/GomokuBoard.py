@@ -1,7 +1,7 @@
 """ Enumeration of all the differents types of possible pawn on the board"""
 from enum import Enum
 from src.utils.PrintGomoku import print_gomoku
-
+from sys import platform
 
 class pawnType(Enum):
     EMPTY = 0
@@ -98,9 +98,16 @@ class GomokuBoard:
         return diagonal
 
     def __str__(self):
-        BLUE = '\033[94m'
-        RED = "\033[1;31;40m"
-        WHITE = "\033[0;37;40m"
+        BLUE = ''
+        RED = ''
+        WHITE = ''
+        if platform == "linux" or platform == "linux2":
+            BLUE = '\033[94m'
+            RED = "\033[1;31;40m"
+            WHITE = "\033[0;37;40m"
+        elif platform == "win32":
+            pass
+
         """ Pass the board as string to be displayed """
         toPrint: str = f"DEBUG - Current board (size {self.__boardSize}):\n"
         toPrint += "DEBUG - 0 is Empty / 1 is Brain / 2 is Manager\n"
