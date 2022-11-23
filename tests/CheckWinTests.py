@@ -14,21 +14,13 @@ def run_check_win_tests():
 
 def test_basic_diagonal_win():
     game = Game()
-    game.get_board_manager().reset_board(5)
-    game.get_board_manager().boardMap = [
-        [pawnType.BRAIN, pawnType.EMPTY, pawnType.EMPTY,
-            pawnType.EMPTY, pawnType.EMPTY],
-        [pawnType.EMPTY, pawnType.BRAIN, pawnType.EMPTY,
-            pawnType.EMPTY, pawnType.EMPTY],
-        [pawnType.EMPTY, pawnType.EMPTY, pawnType.BRAIN,
-            pawnType.EMPTY, pawnType.EMPTY],
-        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
-            pawnType.BRAIN, pawnType.EMPTY],
-        [pawnType.EMPTY, pawnType.EMPTY, pawnType.EMPTY,
-            pawnType.EMPTY, pawnType.BRAIN],
-    ]
-    game.get_brain().boardSize = 5
-    game.get_board_manager().__boardSize = 5
+    game.get_board_manager().reset_board(20)
+    game.get_board_manager().boardMap[0][0] = pawnType.BRAIN
+    game.get_board_manager().boardMap[1][1] = pawnType.BRAIN
+    game.get_board_manager().boardMap[2][2] = pawnType.BRAIN
+    game.get_board_manager().boardMap[3][3] = pawnType.BRAIN
+    game.get_board_manager().boardMap[4][4] = pawnType.BRAIN
+    game.get_brain().boardSize = 20
     assert game.get_brain().check_win(pawnType.BRAIN) == True, game.get_brain().check_win(
         pawnType.MANAGER) == False
 

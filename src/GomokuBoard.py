@@ -80,14 +80,23 @@ class GomokuBoard:
             column.append(self.boardMap[x][y])
         return column
 
-    def get_diagonal(self, x: int, y: int) -> list:
-        """ Get the diagonal of the given coordinates """
-        if not self.__check_pos(x, y):
-            return RuntimeError("The pawn can't be get with the given coordinates")
-        diagonal = []
-        for i in range(0, self.__boardSize):
-            diagonal.append(self.boardMap[i][i])
-        return diagonal
+    def get_diagonals(self):
+        """ Get all the diagonals"""
+        max_col = len(self.boardMap[0])
+        max_row = len(self.boardMap)
+        cols = [[] for _ in range(max_col)]
+        rows = [[] for _ in range(max_row)]
+        fdiag = [[] for _ in range(max_row + max_col - 1)]
+        bdiag = [[] for _ in range(len(fdiag))]
+        min_bdiag = -max_row + 1
+
+        for x in range(max_col):
+            for y in range(max_row):
+                cols[x].append(self.boardMap[y][x])
+                rows[y].append(self.boardMap[y][x])
+                fdiag[x+y].append(self.boardMap[y][x])
+                bdiag[x-y-min_bdiag].append(self.boardMap[y][x])
+        return cols, rows, fdiag, bdiag
 
     def get_reverse_diagonal(self, x: int, y: int) -> list:
         """ Get the reverse diagonal of the given coordinates """

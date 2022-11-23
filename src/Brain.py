@@ -35,43 +35,45 @@ class Brain:
                 else:
                     if aligns[i] == pawnType.EMPTY:
                         coord = i + y
-                    else:
-                        nb = 0
             if nb == WIN:
                 return True, coord
             elif nb == nb_align and coord != -1:
                 return True, coord
+            nb = 0
         return False, -1
 
     def __check_align(self, nb_align: int, pawn_type_to_check: pawnType):
         x = 0
-        for line in self.board.boardMap:
-            found, y = self.__check_lines(nb_align, line, pawn_type_to_check)
+        cols, rows, fdiag, bdiag = self.board.get_diagonals()
+        for col in cols:
+            found, y = self.__check_lines(nb_align, col, pawn_type_to_check)
             if found:
-                print_gomoku("DEBUG LINE")
-                return LINE, x, y
-            column = self.board.get_column(x)
-            found, y = self.__check_lines(nb_align, column, pawn_type_to_check)
-            if found:
-                print_gomoku("DEBUG COLUMN")
                 return COLUMN, y, x
             x += 1
-        diago_len = len(self.board.boardMap)
-        for i in range(0, diago_len):
-            for j in range(0, diago_len):
-                if j >= 4:
-                    left_diago = self.board.get_reverse_diagonal(i, j)
-                    found, coef = self.__check_lines(nb_align, left_diago, pawn_type_to_check)
-                    if found:
-                        print_gomoku("DEBUG LEFT")
-                        return DIAGONAL_LEFT, i + coef, j - coef
-                if diago_len - j >= 4:
-                    right_diago = self.board.get_diagonal(i, j)
-                    found, coef = self.__check_lines(nb_align, right_diago, pawn_type_to_check)
-                    if found:
-                        print_gomoku("DEBUG RIGHT")
-                        return DIAGONAL_RIGHT, i + coef, j + coef
-
+        x = 0
+        for row in rows:
+            found, y = self.__check_lines(nb_align, row, pawn_type_to_check)
+            if found:
+                return LINE, x, y
+            x += 1
+        x = 0
+        for diag in fdiag:
+            found, y = self.__check_lines(nb_align, diag, pawn_type_to_check)
+            if found:
+                if x < 19:
+                    return DIAGONAL_LEFT, 9 - x + y - 1, y
+                else:
+                    return DIAGONAL_LEFT, y + 7, x - 20 + y + 1
+            x += 1
+        x = 0
+        for diag in bdiag:
+            found, y = self.__check_lines(nb_align, diag, pawn_type_to_check)
+            if found:
+                if x < 19:
+                    return DIAGONAL_RIGHT, y + 1, 19 - x + y - 1
+                else:
+                    return DIAGONAL_RIGHT, y, x - 20 + y + 1
+            x += 1
         return NONE, -1, -1
 
 
