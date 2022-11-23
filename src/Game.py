@@ -43,7 +43,7 @@ class Game:
         self.__brain.boardSize = board_size
         print_gomoku("OK")
         self.__brain.board.reset_board(self.__brain.boardSize)
-        print_gomoku(self.__brain.board)
+        self.print_board()
         return True
 
     def turn_command(self) -> bool:
@@ -58,7 +58,6 @@ class Game:
                     print_gomoku(
                         "ERROR message - Unauthorized move (invalid position)")
                     return False
-            print_gomoku("DEBUG message - Valid TURN command")
             if self.__brain.board.get_pawn(int(parsed_args[0]), int(parsed_args[1])) != pawnType.EMPTY:
                 print_gomoku("ERROR message - This cell is already taken")
                 return False
@@ -67,13 +66,13 @@ class Game:
                     int(parsed_args[0]), int(parsed_args[1]))
 
             if self.__brain.check_win(pawnType.MANAGER):
-                print_gomoku("Message message - You've win...")
+                print_gomoku("DEBUG - You've win...")
                 self.end_command()
 
             self.__brain.act()
 
             if self.__brain.check_win(pawnType.BRAIN):
-                print_gomoku("Message message - I've win !!")
+                print_gomoku("DEBUG - I've win !!")
                 self.end_command()
 
         except IndexError:
@@ -85,14 +84,13 @@ class Game:
         except RuntimeError:
             print_gomoku("ERROR message - Runtime error of getPawn")
             return False
-        print_gomoku(self.__brain.board)
+        self.print_board()
         return True
 
     def begin_command(self) -> bool:
         self.__brain.board.add_brain_pawn(
             int(self.__brain.boardSize / 2), int(self.__brain.boardSize / 2))
-        print_gomoku(self.__brain.board)
-        print_gomoku("DEBUG message - Valid BEGIN command")
+        self.print_board()
         return True
 
     def board_command(self) -> bool:
@@ -119,21 +117,20 @@ class Game:
                 self.__brain.board.add_brain_pawn(x, y, False)
             else:
                 self.__brain.board.add_manager_pawn(x, y)
-            print_gomoku("DEBUG Message - Succes on Board Input")
             return True
 
         while True:
             self.parser.ask_input()
             inpt = self.parser.get_parsed_input()
             if inpt[0] == "DONE":
-                print_gomoku("DEBUG Message - Exit BOARD")
                 break
             if not check_board_input(inpt):
                 return False
         self.__brain.act()
         if self.__brain.check_win(pawnType.BRAIN):
-            print_gomoku("Message message - I've win !!")
+            print_gomoku("DEBUG message - I've win !!")
             self.end_command()
+        self.print_board()
         return True
 
     def info_command(self) -> bool:
@@ -183,7 +180,7 @@ class Game:
         return True
 
     def end_command(self) -> bool:
-        print_gomoku(self.__brain.board)
+        self.print_board()
         exit(0)
 
     def about_command(self) -> bool:
@@ -198,3 +195,6 @@ class Game:
 
     def get_brain(self):
         return self.__brain
+
+    def print_board(self):
+        print_gomoku(self.__brain.board)

@@ -1,3 +1,1 @@
-pyinstaller pbrain-gomoku-ai
-
-Rename-Item pbrain-gomoku-ai.spec pbrain-gomoku-ai.exe
+pyinstaller --onefile -n pbrain-gomoku-ai.exe pbrain-gomoku-ai.py
