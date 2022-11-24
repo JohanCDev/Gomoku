@@ -40,7 +40,6 @@ class Brain:
             if nb == WIN:
                 return True, coord
             elif nb == nb_align and coord != -1:
-                print_gomoku("DEBUG Toto", coord)
                 return True, coord
             nb = 0
         return False, -1
