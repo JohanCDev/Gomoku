@@ -40,7 +40,7 @@ class Brain:
             if nb == WIN:
                 return True, coord
             elif nb == nb_align and coord != -1:
-                print_gomoku("DEBUG Toto")
+                print_gomoku("DEBUG Toto", coord)
                 return True, coord
             nb = 0
         return False, -1
@@ -73,9 +73,9 @@ class Brain:
             found, y = self.__check_lines(nb_align, diag, pawn_type_to_check)
             if found:
                 if x < 19:
-                    return DIAGONAL_RIGHT, y + 1, 19 - x + y - 1
+                    return DIAGONAL_RIGHT, y + 1, 19 - x + y - 1 # not yet tested
                 else:
-                    return DIAGONAL_RIGHT, y, x - 20 + y + 1
+                    return DIAGONAL_RIGHT, x - 20 + y + 1, y
             x += 1
         return NONE, -1, -1
 
