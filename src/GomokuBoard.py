@@ -46,6 +46,7 @@ class GomokuBoard:
     def add_brain_pawn(self, x: int, y: int, display=True):
         """ Add a Brain Pawn at the given coordinates """
         self.__add_pawn(x, y, pawnType.BRAIN)
+        print_gomoku("DEBUG ", x, y)
         if display:
             print_gomoku(f"{x},{y}")
 
@@ -64,7 +65,7 @@ class GomokuBoard:
     def get_pawn(self, x: int, y: int):
         """ Get the Pawn at the given coordinates """
         if not self.__check_pos(x, y):
-            return RuntimeError("The pawn can't be get with the given coordinates")
+            raise RuntimeError("The pawn can't be get with the given coordinates")
         return self.boardMap[y][x]
 
     def get_board_size(self) -> int:
@@ -72,27 +73,17 @@ class GomokuBoard:
         return self.__boardSize
 
 
-    def get_cols_rows_diags(self):
+    def get_cols_rows(self):
         """ Get all the diagonals"""
         max_col = len(self.boardMap[0])
         max_row = len(self.boardMap)
         cols = [[] for _ in range(max_col)]
         rows = [[] for _ in range(max_row)]
-        fdiag = [[] for _ in range(max_row + max_col - 1)]
-        # fdiagpos = [[] for _ in range(max_row + max_col - 1)]
-        bdiag = [[] for _ in range(len(fdiag))]
-        # bdiagpos = [[] for _ in range(max_row + max_col - 1)]
-        min_bdiag = -max_row + 1
-
         for x in range(max_col):
             for y in range(max_row):
                 cols[x].append(self.boardMap[x][y])
                 rows[y].append(self.boardMap[x][y])
-                fdiag[x+y].append(self.boardMap[x][y])
-                # fdiagpos[x+y].append((y, x))
-                bdiag[x-y-min_bdiag].append(self.boardMap[x][y])
-                # bdiagpos[x-y-min_bdiag].append((y, x))
-        return cols, rows, fdiag, bdiag
+        return cols, rows
 
     def get_reverse_diagonal(self, x: int, y: int) -> list:
         """ Get the reverse diagonal of the given coordinates """
