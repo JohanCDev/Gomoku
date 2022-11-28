@@ -17,32 +17,65 @@ LINE = 2
 DIAGONAL_LEFT = 3
 DIAGONAL_RIGHT = 4
 
-# def evaluate_board(board :  GomokuBoard) -> int:
+TWO_PAWN_WIN = 1000000000
 
-#     def add_score(x, y, pawnType, direction):
-#         pass
+def evaluate_board(board : GomokuBoard, team : pawnType, enemy : pawnType) -> int:
 
-#     def check_explore(x, y):
-#         def check_lines():
-#             pass
-#         def check_columns():
-#             pass
-#         def check_right_diago():
-#             pass
-#         def check_left_diago():
-#             pass
-#         return 1000000
+    def check_explore():
+        def explore_two_pawn_win(line) -> bool:
+            if line.count(enemy) == 0 and line.count(team) == 3 and line[-1] == pawnType.EMPTY:
+                for z in range(len(line)):
+                    if line[z] == pawnType.EMPTY:
+                        return True, z
+            return False, -1
+        
+        for y in range(board.get_board_size()):
+            for x in range(board.get_board_size()):
+                cell = board.get_pawn(x, y)
+                if cell == pawnType.EMPTY:
+                    try:
+                        line = []
+                        for i in range(5):
+                            line.append(board.get_pawn(x + i + 1, y))
+                        can_win, z = explore_two_pawn_win(line)
+                        if can_win:
+                            return TWO_PAWN_WIN, y, x + z + 1
+                    except:
+                        pass
+                    try:
+                        column = []
+                        for i in range(5):
+                            column.append(board.get_pawn(x, y + i + 1))
+                        can_win, z =  explore_two_pawn_win(column)
+                        if can_win:
+                            return TWO_PAWN_WIN, y + z + 1, x
+                    except:
+                        pass
+                    try:
+                        right_diago = []
+                        for i in range(5):
+                            right_diago.append(board.get_pawn(x + i + 1, y + i + 1))
+                        can_win, z =  explore_two_pawn_win(right_diago)
+                        if can_win:
+                            return TWO_PAWN_WIN, y + z + 1, x + z + 1
+                    except:
+                        pass
+                    try:
+                        left_diago = []
+                        for i in range(5):
+                            left_diago.append(board.get_pawn(x + i + 1, y - i - 1))
+                        can_win, z =  explore_two_pawn_win(left_diago)
+                        if can_win:
+                            return TWO_PAWN_WIN, y - z - 1, x + z + 1
+                    except:
+                        pass
+        return 0, -1, -1
 
-#     score : int = 0
-#     for x in range(board.get_board_size()):
-#         for y in range(board.get_board_size()):
-#             cell = board.get_pawn(x, y)
-#             if cell == pawnType.EMPTY:
-#                 if check_explore():
-#                     return 1000000
-#             else:
-#                 score += add_score(x, y, cell)
-#     return score
+    score, y, x = check_explore()
+    if score == TWO_PAWN_WIN:
+        return score, y, x
+    score = 0
+    return score, -1, -1
 
 
 class Brain:
@@ -155,14 +188,22 @@ class Brain:
             while self.board.get_pawn(x, y) != pawnType.EMPTY:
                 x, y = self.__get_random_coords(self.boardSize - 1)
             self.board.add_brain_pawn(x, y)
-            return x, y
         else:
             action, x, y = self.__naive_thinking()
             if action == PAWN_UP:
+                ### EXPLORE ###
+                score, y, x = evaluate_board(self.board, pawnType.BRAIN, pawnType.MANAGER)
+                if score == TWO_PAWN_WIN:
+                    self.board.add_brain_pawn(x, y)
+                    return
+                score, y, x = evaluate_board(self.board, pawnType.MANAGER, pawnType.BRAIN)
+                if score == TWO_PAWN_WIN:
+                    self.board.add_brain_pawn(x, y)
+                    return
+                ### EXPLORE ###
                 self.act(True)
             else:
                 self.board.add_brain_pawn(x, y)
-                return x, y
 
     def call_naive(self):
         """ Only for tests """
