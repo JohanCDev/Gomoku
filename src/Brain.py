@@ -19,7 +19,7 @@ DIAGONAL_RIGHT = 4
 
 # def evaluate_board(board :  GomokuBoard) -> int:
 
-#     def add_score(x, y, pawnType, direction):    
+#     def add_score(x, y, pawnType, direction):
 #         pass
 
 #     def check_explore(x, y):
@@ -32,7 +32,7 @@ DIAGONAL_RIGHT = 4
 #         def check_left_diago():
 #             pass
 #         return 1000000
-    
+
 #     score : int = 0
 #     for x in range(board.get_board_size()):
 #         for y in range(board.get_board_size()):
@@ -43,7 +43,7 @@ DIAGONAL_RIGHT = 4
 #             else:
 #                 score += add_score(x, y, cell)
 #     return score
-    
+
 
 class Brain:
 
@@ -86,34 +86,44 @@ class Brain:
                 return LINE, x, y
             x += 1
         x = 0
-       
-        for y in range(self.boardSize):
-            for x in range(self.boardSize):
-                cell = self.board.get_pawn(x, y)
-                if cell == pawn_type_to_check or cell == pawnType.EMPTY:
-                    try:
-                        line = []
-                        for i in range(nb_align):
-                            line.append(self.board.get_pawn(x + i, y + i))
-                        found, m = self.__check_lines(nb_align, line, pawn_type_to_check)
-                        if found:
-                            print_gomoku("DEBUG AAAA")
-                            return DIAGONAL_RIGHT, x + m , y + m
-                    except:
-                        pass
-                    try:
-                        line = []
-                        for i in range(nb_align):
-                            line.append(self.board.get_pawn(x + i, y - i))
-                        found, m = self.__check_lines(nb_align, line, pawn_type_to_check)
-                        if found:
-                            print_gomoku("DEBUG BBBB")
-                            return DIAGONAL_LEFT, x + m , y - m
-                    except:
-                        pass
+        def get_rows(grid):
+            return [[c for c in r] for r in grid]
 
+        def get_cols(grid):
+            return zip(*grid)
 
+        def get_backward_diagonals(grid):
+            b = [None] * (len(grid) - 1)
+            grid = [b[i:] + r + b[:i] for i, r in enumerate(get_rows(grid))]
+            return [[c for c in r if c is not None] for r in get_cols(grid)]
 
+        def get_forward_diagonals(grid):
+            b = [None] * (len(grid) - 1)
+            grid = [b[:i] + r + b[i:] for i, r in enumerate(get_rows(grid))]
+            return [[c for c in r if c is not None] for r in get_cols(grid)]
+
+        pos = []
+        for i in range(self.boardSize - 1, -1, -1):
+            pos.append((0, i))
+        for i in range(1, self.boardSize):
+            pos.append((i, 0))
+        for diag in get_backward_diagonals(self.board.boardMap):
+            found, y = self.__check_lines(nb_align, diag, pawn_type_to_check)
+            if found:
+                return DIAGONAL_RIGHT, pos[x][0] + y, pos[x][1] + y
+            x += 1
+        x = 0
+        pos.clear()
+        for i in range(0, self.boardSize - 1):
+            pos.append((i, 0))
+        for i in range(0, self.boardSize):
+            pos.append((self.boardSize - 1, i))
+        print(pos)
+        for diag in get_forward_diagonals(self.board.boardMap):
+            found, y = self.__check_lines(nb_align, diag, pawn_type_to_check)
+            if found:
+                return DIAGONAL_LEFT, pos[x][0] - y, pos[x][1] + y
+            x += 1
         return NONE, -1, -1
 
     def __get_random_coords(self, max_value: int):
