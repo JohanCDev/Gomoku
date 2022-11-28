@@ -118,7 +118,6 @@ class Brain:
             pos.append((i, 0))
         for i in range(0, self.boardSize):
             pos.append((self.boardSize - 1, i))
-        print(pos)
         for diag in get_forward_diagonals(self.board.boardMap):
             found, y = self.__check_lines(nb_align, diag, pawn_type_to_check)
             if found:
