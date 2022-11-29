@@ -159,12 +159,39 @@ class Brain:
         return NONE, -1, -1
 
     def __get_random_coords(self, max_value: int):
-        rand_x = random.randrange(max_value)
-        rand_y = random.randrange(max_value)
-        while self.board.get_pawn(rand_x, rand_y) != pawnType.EMPTY:
-            rand_x = random.randrange(max_value)
-            rand_y = random.randrange(max_value)
-        return rand_x, rand_y
+        pawns_list: list[tuple[int, int]] = []
+        directions = {
+            0: (-1, -1),
+            1: (0, -1),
+            2: (1, -1),
+            3: (1, 0),
+            4: (1, 1),
+            5: (0, 1),
+            6: (-1, 1),
+            7: (-1, 0)
+        }
+        for y in range(self.boardSize - 1):
+            for x in range(self.boardSize - 1):
+                if self.board.get_pawn(x, y) == pawnType.BRAIN:
+                    pawns_list.append((x, y))
+        if len(pawns_list) == 0:
+            rand_x = random.randrange(self.boardSize - 1)
+            rand_y = random.randrange(self.boardSize - 1)
+            while self.board.get_pawn(rand_x, rand_y) != pawnType.EMPTY:
+                rand_x = random.randrange(self.boardSize - 1)
+                rand_y = random.randrange(self.boardSize - 1)
+            return rand_x, rand_y
+        while True:
+            list_rand = random.randrange(len(pawns_list))
+            selected_pawn = pawns_list[list_rand]
+            dir_rand = random.randrange(8)
+            try:
+                if self.board.get_pawn(selected_pawn[0] + directions[dir_rand][0],
+                                       selected_pawn[1] + directions[dir_rand][1]) == pawnType.EMPTY:
+                    print(selected_pawn[0] + directions[dir_rand][0], selected_pawn[1] + directions[dir_rand][1])
+                    return selected_pawn[0] + directions[dir_rand][0], selected_pawn[1] + directions[dir_rand][1]
+            except RuntimeError:
+                continue
 
     def __naive_thinking(self):
         aligned, x, y = self.__check_align(NAIVE, pawnType.BRAIN)
