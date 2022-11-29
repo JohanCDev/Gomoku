@@ -67,13 +67,11 @@ class Game:
 
             if self.__brain.check_win(pawnType.MANAGER):
                 print_gomoku("DEBUG - You've win...")
-                self.end_command()
 
             self.__brain.act()
 
             if self.__brain.check_win(pawnType.BRAIN):
                 print_gomoku("DEBUG - I've win !!")
-                self.end_command()
 
         except IndexError:
             print_gomoku("ERROR message - No movement was given")
@@ -129,7 +127,6 @@ class Game:
         self.__brain.act()
         if self.__brain.check_win(pawnType.BRAIN):
             print_gomoku("DEBUG message - I've win !!")
-            self.end_command()
         self.print_board()
         return True
 
