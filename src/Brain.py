@@ -188,7 +188,6 @@ class Brain:
             try:
                 if self.board.get_pawn(selected_pawn[0] + directions[dir_rand][0],
                                        selected_pawn[1] + directions[dir_rand][1]) == pawnType.EMPTY:
-                    print(selected_pawn[0] + directions[dir_rand][0], selected_pawn[1] + directions[dir_rand][1])
                     return selected_pawn[0] + directions[dir_rand][0], selected_pawn[1] + directions[dir_rand][1]
             except RuntimeError:
                 continue
@@ -209,11 +208,13 @@ class Brain:
 
     def act(self, force_random: bool = False):
         x = 0
-        y = 0
+        y = 0   
         if force_random:
             x, y = self.__get_random_coords(self.boardSize - 1)
             while self.board.get_pawn(x, y) != pawnType.EMPTY:
                 x, y = self.__get_random_coords(self.boardSize - 1)
+            # newBoardTest = self.board.new(self.board.boardMap, x, y, pawnType.MANAGER)
+            # print_gomoku("DEBUG TEST BOARD\n", newBoardTest)
             self.board.add_brain_pawn(x, y)
         else:
             action, x, y = self.__naive_thinking()
