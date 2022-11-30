@@ -43,6 +43,10 @@ class GomokuBoard:
             raise RuntimeError('Cell is not empty')
         self.boardMap[y][x] = type
 
+    def duplicate_pawn(self, x, y, type):
+        """ TO USE ONLY IN ADD AND DUPLICATE """
+        self.__add_pawn(x, y, type)
+
     def add_brain_pawn(self, x: int, y: int, display=True):
         """ Add a Brain Pawn at the given coordinates """
         self.__add_pawn(x, y, pawnType.BRAIN)

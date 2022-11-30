@@ -19,6 +19,8 @@ DIAGONAL_RIGHT = 4
 
 TWO_PAWN_WIN = 1000000000
 
+SCORE_NOT_CALCULATED = "-1"
+
 def evaluate_board(board : GomokuBoard, team : pawnType, enemy : pawnType) -> int:
 
     def check_explore():
@@ -28,7 +30,7 @@ def evaluate_board(board : GomokuBoard, team : pawnType, enemy : pawnType) -> in
                     if line[z] == pawnType.EMPTY:
                         return True, z
             return False, -1
-        
+
         for y in range(board.get_board_size()):
             for x in range(board.get_board_size()):
                 cell = board.get_pawn(x, y)
@@ -77,6 +79,32 @@ def evaluate_board(board : GomokuBoard, team : pawnType, enemy : pawnType) -> in
     score = 0
     return score, -1, -1
 
+def get_score(to_evaluate) -> int:
+    score : int = 0
+    ## TO DO
+    return score
+
+def add_and_duplicate(boardToCopy : GomokuBoard, i : int, j : int, pawn : pawnType, toEvaluate : bool = False):
+    score = SCORE_NOT_CALCULATED
+    size = boardToCopy.get_board_size()
+    newBoard = GomokuBoard(size)
+
+    for y in range(size):
+        for x in range(size):
+            newBoard.duplicate_pawn(x, y, boardToCopy.get_pawn(x, y))
+
+    newBoard.duplicate_pawn(i, j, pawn)
+
+    if toEvaluate:
+        score = get_score(newBoard)
+    return newBoard, score
+
+def min_max(originBoard, currbranch : int = 0):
+    BRANCHES = 5
+    DEPTH = 2
+    boardList = []
+    ## TO DO (board, score) --> boardList
+    pass
 
 class Brain:
 
@@ -208,13 +236,12 @@ class Brain:
 
     def act(self, force_random: bool = False):
         x = 0
-        y = 0   
+        y = 0
         if force_random:
             x, y = self.__get_random_coords(self.boardSize - 1)
             while self.board.get_pawn(x, y) != pawnType.EMPTY:
                 x, y = self.__get_random_coords(self.boardSize - 1)
-            # newBoardTest = self.board.new(self.board.boardMap, x, y, pawnType.MANAGER)
-            # print_gomoku("DEBUG TEST BOARD\n", newBoardTest)
+            add_and_duplicate(self.board, x, y, pawnType.MANAGER)
             self.board.add_brain_pawn(x, y)
         else:
             action, x, y = self.__naive_thinking()
