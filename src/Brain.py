@@ -21,7 +21,7 @@ TWO_PAWN_WIN = 1000000000
 
 SCORE_NOT_CALCULATED = "-1"
 
-def evaluate_board(board : GomokuBoard, team : pawnType, enemy : pawnType) -> int:
+def evaluate_explore(board : GomokuBoard, team : pawnType, enemy : pawnType) -> int:
 
     def check_explore():
         def explore_two_pawn_win(line) -> bool:
@@ -79,9 +79,115 @@ def evaluate_board(board : GomokuBoard, team : pawnType, enemy : pawnType) -> in
     score = 0
     return score, -1, -1
 
-def get_score(to_evaluate) -> int:
+def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> int:
+    def score_line(pawn, x, y):
+        nb_max_align = 3
+        try:
+            line = []
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x + i, y))
+            if line.count(pawn) == nb_max_align:
+                return 100
+            else:
+                raise
+        except:
+            nb_max_align -= 1
+            line.clear()
+        try:
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x + i, y))
+            if line.count(pawn) == nb_max_align:
+                return 10
+            else:
+                raise
+        except:
+            return 1
+
+    def score_column(pawn, x, y):
+        nb_max_align = 3
+        try:
+            line = []
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 100
+            else:
+                raise
+        except:
+            nb_max_align -= 1
+            line.clear()
+        try:
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 10
+            else:
+                raise
+        except:
+            return 1
+
+    def score_r_diago(pawn, x, y):
+        nb_max_align = 3
+        try:
+            line = []
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x + i, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 100
+            else:
+                raise
+        except:
+            nb_max_align -= 1
+            line.clear()
+        try:
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x + i, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 10
+            else:
+                raise
+        except:
+            return 1
+
+    def score_l_diago(pawn, x, y):
+        nb_max_align = 3
+        try:
+            line = []
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x - i, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 100
+            else:
+                raise
+        except:
+            nb_max_align -= 1
+            line.clear()
+        try:
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x - i, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 10
+            else:
+                raise
+        except:
+            return 1
+
     score : int = 0
-    ## TO DO
+    size : int = to_evaluate.get_board_size()
+    for y in range(size):
+        for x in range(size):
+            cell = to_evaluate.get_pawn(x, y)
+            if cell == team:
+                score += score_line(team, x, y)
+                score += score_column(team, x, y)
+                score += score_r_diago(team, x, y)
+                score += score_l_diago(team, x, y)
+            elif cell == enemy:
+                score -= score_line(enemy, x, y)
+                score -= score_column(enemy, x, y)
+                score -= score_r_diago(enemy, x, y)
+                score -= score_l_diago(enemy, x, y)
+
     return score
 
 def add_and_duplicate(boardToCopy : GomokuBoard, i : int, j : int, pawn : pawnType, toEvaluate : bool = False):
@@ -96,7 +202,11 @@ def add_and_duplicate(boardToCopy : GomokuBoard, i : int, j : int, pawn : pawnTy
     newBoard.duplicate_pawn(i, j, pawn)
 
     if toEvaluate:
-        score = get_score(newBoard)
+        if pawn == pawnType.BRAIN:
+            enemy = pawnType.MANAGER
+        else:
+            enemy = pawnType.BRAIN
+        score = get_score(newBoard, pawn, enemy)
     return newBoard, score
 
 def random_pawn_for_board(a_board : GomokuBoard, type_of_pawn : pawnType):
@@ -302,6 +412,7 @@ class Brain:
         x = 0
         y = 0
         if force_random:
+            min_max(self.board)
             x, y = self.__get_random_coords(self.boardSize - 1)
             while self.board.get_pawn(x, y) != pawnType.EMPTY:
                 x, y = self.__get_random_coords(self.boardSize - 1)
@@ -311,11 +422,11 @@ class Brain:
             action, x, y = self.__naive_thinking()
             if action == PAWN_UP:
                 ### EXPLORE ###
-                score, y, x = evaluate_board(self.board, pawnType.BRAIN, pawnType.MANAGER)
+                score, y, x = evaluate_explore(self.board, pawnType.BRAIN, pawnType.MANAGER)
                 if score == TWO_PAWN_WIN:
                     self.board.add_brain_pawn(x, y)
                     return
-                score, y, x = evaluate_board(self.board, pawnType.MANAGER, pawnType.BRAIN)
+                score, y, x = evaluate_explore(self.board, pawnType.MANAGER, pawnType.BRAIN)
                 if score == TWO_PAWN_WIN:
                     self.board.add_brain_pawn(x, y)
                     return
