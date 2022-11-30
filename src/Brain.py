@@ -245,8 +245,8 @@ def random_pawn_for_board(a_board : GomokuBoard, type_of_pawn : pawnType):
             continue
 
 def min_max(originBoard, currdepth : int = 0, board_list = [], type : pawnType = pawnType.BRAIN):
-    BRANCHES = 5
-    DEPTH = 2
+    BRANCHES = 3
+    DEPTH = 4
     needEval : bool = False
     new_board_list = []
 
