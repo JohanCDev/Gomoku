@@ -19,7 +19,9 @@ DIAGONAL_RIGHT = 4
 
 TWO_PAWN_WIN = 1000000000
 
-def evaluate_board(board : GomokuBoard, team : pawnType, enemy : pawnType) -> int:
+SCORE_NOT_CALCULATED = "-1"
+
+def evaluate_explore(board : GomokuBoard, team : pawnType, enemy : pawnType) -> int:
 
     def check_explore():
         def explore_two_pawn_win(line) -> bool:
@@ -28,7 +30,7 @@ def evaluate_board(board : GomokuBoard, team : pawnType, enemy : pawnType) -> in
                     if line[z] == pawnType.EMPTY:
                         return True, z
             return False, -1
-        
+
         for y in range(board.get_board_size()):
             for x in range(board.get_board_size()):
                 cell = board.get_pawn(x, y)
@@ -77,6 +79,206 @@ def evaluate_board(board : GomokuBoard, team : pawnType, enemy : pawnType) -> in
     score = 0
     return score, -1, -1
 
+def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> int:
+    def score_line(pawn, x, y):
+        nb_max_align = 3
+        try:
+            line = []
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x + i, y))
+            if line.count(pawn) == nb_max_align:
+                return 100
+            else:
+                raise
+        except:
+            nb_max_align -= 1
+            line.clear()
+        try:
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x + i, y))
+            if line.count(pawn) == nb_max_align:
+                return 10
+            else:
+                raise
+        except:
+            return 1
+
+    def score_column(pawn, x, y):
+        nb_max_align = 3
+        try:
+            line = []
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 100
+            else:
+                raise
+        except:
+            nb_max_align -= 1
+            line.clear()
+        try:
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 10
+            else:
+                raise
+        except:
+            return 1
+
+    def score_r_diago(pawn, x, y):
+        nb_max_align = 3
+        try:
+            line = []
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x + i, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 100
+            else:
+                raise
+        except:
+            nb_max_align -= 1
+            line.clear()
+        try:
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x + i, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 10
+            else:
+                raise
+        except:
+            return 1
+
+    def score_l_diago(pawn, x, y):
+        nb_max_align = 3
+        try:
+            line = []
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x - i, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 100
+            else:
+                raise
+        except:
+            nb_max_align -= 1
+            line.clear()
+        try:
+            for i in range(nb_max_align):
+                line.append(to_evaluate.get_pawn(x - i, y + i))
+            if line.count(pawn) == nb_max_align:
+                return 10
+            else:
+                raise
+        except:
+            return 1
+
+    score : int = 0
+    size : int = to_evaluate.get_board_size()
+    for y in range(size):
+        for x in range(size):
+            cell = to_evaluate.get_pawn(x, y)
+            if cell == team:
+                score += score_line(team, x, y)
+                score += score_column(team, x, y)
+                score += score_r_diago(team, x, y)
+                score += score_l_diago(team, x, y)
+            elif cell == enemy:
+                score -= score_line(enemy, x, y)
+                score -= score_column(enemy, x, y)
+                score -= score_r_diago(enemy, x, y)
+                score -= score_l_diago(enemy, x, y)
+
+    return score
+
+def add_and_duplicate(boardToCopy : GomokuBoard, i : int, j : int, pawn : pawnType, toEvaluate : bool = False):
+    score = SCORE_NOT_CALCULATED
+    size = boardToCopy.get_board_size()
+    newBoard = GomokuBoard(size)
+
+    for y in range(size):
+        for x in range(size):
+            newBoard.duplicate_pawn(x, y, boardToCopy.get_pawn(x, y))
+
+    newBoard.duplicate_pawn(i, j, pawn)
+
+    if toEvaluate:
+        if pawn == pawnType.BRAIN:
+            enemy = pawnType.MANAGER
+        else:
+            enemy = pawnType.BRAIN
+        score = get_score(newBoard, pawn, enemy)
+    return newBoard, score
+
+def random_pawn_for_board(a_board : GomokuBoard, type_of_pawn : pawnType):
+    pawns_list: list[tuple[int, int]] = []
+    directions = {
+        0: (-1, -1),
+        1: (0, -1),
+        2: (1, -1),
+        3: (1, 0),
+        4: (1, 1),
+        5: (0, 1),
+        6: (-1, 1),
+        7: (-1, 0)
+    }
+    size = a_board.get_board_size()
+    for y in range(size):
+        for x in range(size):
+            if a_board.get_pawn(x, y) == type_of_pawn:
+                pawns_list.append((x, y))
+    if len(pawns_list) == 0:
+        rand_x = random.randrange(size)
+        rand_y = random.randrange(size)
+        while a_board.get_pawn(rand_x, rand_y) != pawnType.EMPTY:
+            rand_x = random.randrange(size)
+            rand_y = random.randrange(size)
+        return rand_x, rand_y
+    while True:
+        list_rand = random.randrange(len(pawns_list))
+        selected_pawn = pawns_list[list_rand]
+        dir_rand = random.randrange(8)
+        try:
+            if a_board.get_pawn(selected_pawn[0] + directions[dir_rand][0],
+                                    selected_pawn[1] + directions[dir_rand][1]) == pawnType.EMPTY:
+                return selected_pawn[0] + directions[dir_rand][0], selected_pawn[1] + directions[dir_rand][1]
+        except RuntimeError:
+            continue
+
+def min_max(originBoard, currdepth : int = 0, board_list = [], type : pawnType = pawnType.BRAIN):
+    BRANCHES = 5
+    DEPTH = 2
+    needEval : bool = False
+    new_board_list = []
+
+    if currdepth + 1 == DEPTH:
+        needEval = True
+
+    if len(board_list) == 0:
+        for _ in range(BRANCHES):
+            x, y = random_pawn_for_board(originBoard, type)
+            newBoard, score = add_and_duplicate(originBoard, x, y, type, needEval)
+            new_board_list.append((newBoard, score, x, y))
+    else:
+        for old in board_list:
+            for _ in range(BRANCHES):
+                x, y = random_pawn_for_board(old[0], type)
+                newBoard, score = add_and_duplicate(old[0], x, y, type, needEval)
+                new_board_list.append((newBoard, score, x, y))
+
+    if needEval:
+        highest_board = None
+        for b in new_board_list:
+            if highest_board is None:
+                highest_board = b
+            elif highest_board[1] < b[1]:
+                highest_board = b
+        return highest_board[2], highest_board[3]
+    else:
+        if type == pawnType.BRAIN:
+            type = pawnType.MANAGER
+        else:
+            type = pawnType.BRAIN
+        return min_max(originBoard, currdepth + 1, new_board_list, type)
 
 class Brain:
 
@@ -208,23 +410,23 @@ class Brain:
 
     def act(self, force_random: bool = False):
         x = 0
-        y = 0   
+        y = 0
         if force_random:
-            x, y = self.__get_random_coords(self.boardSize - 1)
-            while self.board.get_pawn(x, y) != pawnType.EMPTY:
-                x, y = self.__get_random_coords(self.boardSize - 1)
-            # newBoardTest = self.board.new(self.board.boardMap, x, y, pawnType.MANAGER)
-            # print_gomoku("DEBUG TEST BOARD\n", newBoardTest)
+            x, y = min_max(self.board)
+            # x, y = self.__get_random_coords(self.boardSize - 1)
+            # while self.board.get_pawn(x, y) != pawnType.EMPTY:
+            #     x, y = self.__get_random_coords(self.boardSize - 1)
+            # add_and_duplicate(self.board, x, y, pawnType.MANAGER)
             self.board.add_brain_pawn(x, y)
         else:
             action, x, y = self.__naive_thinking()
             if action == PAWN_UP:
                 ### EXPLORE ###
-                score, y, x = evaluate_board(self.board, pawnType.BRAIN, pawnType.MANAGER)
+                score, y, x = evaluate_explore(self.board, pawnType.BRAIN, pawnType.MANAGER)
                 if score == TWO_PAWN_WIN:
                     self.board.add_brain_pawn(x, y)
                     return
-                score, y, x = evaluate_board(self.board, pawnType.MANAGER, pawnType.BRAIN)
+                score, y, x = evaluate_explore(self.board, pawnType.MANAGER, pawnType.BRAIN)
                 if score == TWO_PAWN_WIN:
                     self.board.add_brain_pawn(x, y)
                     return
