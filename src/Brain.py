@@ -133,7 +133,7 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x + i, y + i))
             if line.count(pawn) == nb_max_align:
-                return 100
+                return 120
             else:
                 raise
         except:
@@ -143,7 +143,7 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x + i, y + i))
             if line.count(pawn) == nb_max_align:
-                return 10
+                return 12
             else:
                 raise
         except:
@@ -156,7 +156,7 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x - i, y + i))
             if line.count(pawn) == nb_max_align:
-                return 100
+                return 120
             else:
                 raise
         except:
@@ -166,7 +166,7 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x - i, y + i))
             if line.count(pawn) == nb_max_align:
-                return 10
+                return 12
             else:
                 raise
         except:
@@ -250,7 +250,7 @@ def min_max(originBoard, currdepth : int = 0, board_list = [], type : pawnType =
     needEval : bool = False
     new_board_list = []
 
-    if currdepth + 1 == DEPTH:
+    if currdepth == DEPTH:
         needEval = True
 
     if len(board_list) == 0:
@@ -262,8 +262,9 @@ def min_max(originBoard, currdepth : int = 0, board_list = [], type : pawnType =
         for old in board_list:
             for _ in range(BRANCHES):
                 x, y = random_pawn_for_board(old[0], type)
+                i, j = old[2], old[3]
                 newBoard, score = add_and_duplicate(old[0], x, y, type, needEval)
-                new_board_list.append((newBoard, score, x, y))
+                new_board_list.append((newBoard, score, i, j))
 
     if needEval:
         highest_board = None
@@ -413,10 +414,6 @@ class Brain:
         y = 0
         if force_random:
             x, y = min_max(self.board)
-            # x, y = self.__get_random_coords(self.boardSize - 1)
-            # while self.board.get_pawn(x, y) != pawnType.EMPTY:
-            #     x, y = self.__get_random_coords(self.boardSize - 1)
-            # add_and_duplicate(self.board, x, y, pawnType.MANAGER)
             self.board.add_brain_pawn(x, y)
         else:
             action, x, y = self.__naive_thinking()
