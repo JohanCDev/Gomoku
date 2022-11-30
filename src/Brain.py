@@ -278,7 +278,7 @@ def min_max(originBoard, currdepth : int = 0, board_list = [], type : pawnType =
             type = pawnType.MANAGER
         else:
             type = pawnType.BRAIN
-        min_max(originBoard, currdepth + 1, new_board_list, type)
+        return min_max(originBoard, currdepth + 1, new_board_list, type)
 
 class Brain:
 
@@ -412,11 +412,11 @@ class Brain:
         x = 0
         y = 0
         if force_random:
-            min_max(self.board)
-            x, y = self.__get_random_coords(self.boardSize - 1)
-            while self.board.get_pawn(x, y) != pawnType.EMPTY:
-                x, y = self.__get_random_coords(self.boardSize - 1)
-            add_and_duplicate(self.board, x, y, pawnType.MANAGER)
+            x, y = min_max(self.board)
+            # x, y = self.__get_random_coords(self.boardSize - 1)
+            # while self.board.get_pawn(x, y) != pawnType.EMPTY:
+            #     x, y = self.__get_random_coords(self.boardSize - 1)
+            # add_and_duplicate(self.board, x, y, pawnType.MANAGER)
             self.board.add_brain_pawn(x, y)
         else:
             action, x, y = self.__naive_thinking()
