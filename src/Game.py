@@ -43,7 +43,6 @@ class Game:
         self.__brain.boardSize = board_size
         print_gomoku("OK")
         self.__brain.board.reset_board(self.__brain.boardSize)
-        self.print_board()
         return True
 
     def turn_command(self) -> bool:
@@ -82,13 +81,11 @@ class Game:
         except RuntimeError:
             print_gomoku("ERROR message - Runtime error of getPawn")
             return False
-        self.print_board()
         return True
 
     def begin_command(self) -> bool:
         self.__brain.board.add_brain_pawn(
             int(self.__brain.boardSize / 2), int(self.__brain.boardSize / 2))
-        self.print_board()
         return True
 
     def board_command(self) -> bool:
@@ -127,7 +124,6 @@ class Game:
         self.__brain.act()
         if self.__brain.check_win(pawnType.BRAIN):
             print_gomoku("DEBUG message - I've win !!")
-        self.print_board()
         return True
 
     def info_command(self) -> bool:
@@ -177,7 +173,6 @@ class Game:
         return True
 
     def end_command(self) -> bool:
-        self.print_board()
         exit(0)
 
     def about_command(self) -> bool:
