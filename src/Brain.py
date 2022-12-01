@@ -80,6 +80,11 @@ def evaluate_explore(board : GomokuBoard, team : pawnType, enemy : pawnType) -> 
     return score, -1, -1
 
 def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> int:
+    def near_wall(value):
+        if value < 5 or value > 15:
+            return True
+        return False
+    
     def score_line(pawn, x, y):
         nb_max_align = 3
         try:
@@ -87,7 +92,10 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x + i, y))
             if line.count(pawn) == nb_max_align:
-                return 100
+                if near_wall(x):
+                    return 30
+                else:
+                    return 75
             else:
                 raise
         except:
@@ -97,7 +105,10 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x + i, y))
             if line.count(pawn) == nb_max_align:
-                return 10
+                if near_wall(x):
+                    return 7
+                else:
+                    return 20
             else:
                 raise
         except:
@@ -110,7 +121,10 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x, y + i))
             if line.count(pawn) == nb_max_align:
-                return 100
+                if near_wall(y):
+                    return 30
+                else:
+                    return 75
             else:
                 raise
         except:
@@ -120,7 +134,10 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x, y + i))
             if line.count(pawn) == nb_max_align:
-                return 10
+                if near_wall(y):
+                    return 7
+                else:
+                    return 20
             else:
                 raise
         except:
@@ -133,7 +150,10 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x + i, y + i))
             if line.count(pawn) == nb_max_align:
-                return 120
+                if near_wall(x) or near_wall(y):
+                    return 50
+                else:
+                    return 125
             else:
                 raise
         except:
@@ -143,7 +163,10 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x + i, y + i))
             if line.count(pawn) == nb_max_align:
-                return 12
+                if near_wall(x) or near_wall(y):
+                    return 13
+                else:
+                    return 40
             else:
                 raise
         except:
@@ -156,7 +179,10 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x - i, y + i))
             if line.count(pawn) == nb_max_align:
-                return 120
+                if near_wall(x) or near_wall(y):
+                    return 50
+                else:
+                    return 125
             else:
                 raise
         except:
@@ -166,7 +192,10 @@ def get_score(to_evaluate : GomokuBoard, team : pawnType, enemy : pawnType) -> i
             for i in range(nb_max_align):
                 line.append(to_evaluate.get_pawn(x - i, y + i))
             if line.count(pawn) == nb_max_align:
-                return 12
+                if near_wall(x) or near_wall(y):
+                    return 13
+                else:
+                    return 40
             else:
                 raise
         except:
